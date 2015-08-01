@@ -1,0 +1,203 @@
+/**
+ * General elements
+ */
+
+ 
+#header,
+#navbar,
+#flash,
+#footer
+ {
+    .column(@columns);
+    margin-bottom: 22px;
+}
+ 
+#main {
+    .column(@columns / 3 * 2);
+    margin-bottom: 22px;
+}
+ 
+#sidebar {
+    .column(@columns / 3);
+    margin-bottom: 22px;
+}
+ 
+#featured-1,
+#featured-2,
+#featured-3,
+#triptych-1,
+#triptych-2,
+#triptych-3 {
+    .column(@columns / 3);
+    margin-bottom: 22px;
+}
+ 
+#footer-col-1,
+#footer-col-2,
+#footer-col-3, 
+#footer-col-4 {
+    .column(@columns / 4);
+    margin-bottom: 22px;
+}  
+ 
+#wrapper,
+#flash,
+#wrap-featured,
+#wrap-triptych,
+#wrap-main, 
+#wrap-footer-col,
+#footer, {
+    .clearfix();
+} 
+
+#wrap-featured,
+#wrap-triptych,
+#wrap-main, 
+#wrap-footer-col,
+#footer, {
+    border-top: solid 1px #ccc;
+} 
+
+#main
+ {
+    box-sizing: border-box;
+    border-right: solid 1px #ccc;
+} 
+
+
+
+/*
+// backgroundcolor for boxes
+#flash,
+#main,
+#sidebar,
+#featured-1,
+#featured-2,
+#featured-3,
+#triptych-1,
+#triptych-2,
+#triptych-3, 
+#footer-col-1,
+#footer-col-2,
+#footer-col-3, 
+#footer-col-4 {
+    background:#cccccc;
+    min-height:4em;
+} 
+*/ 
+ 
+ 
+ 
+
+body {
+  color: #333;
+  font-family: arial, sans-serif;
+  overflow-y: scroll;
+  /*background: #45ceef;*/
+  background: #DADF2A;
+  padding-top: 10px;
+  padding-bottom: 10px;
+}
+
+h1 {
+  font-family: georgia, serif;
+  letter-spacing: -1px;
+}
+
+a {
+text-decoration:none;
+}
+
+a:hover {
+text-decoration:underline;
+}
+
+
+/**
+ * Layout of the main page elements 
+ */
+#wrapper {
+  margin: 0 auto;
+  max-width: 960px; 
+  min-width: 639px;
+  -moz-box-shadow: 5px 8px 10px #444;
+  -webkit-box-shadow: 5px 8px 10px #444;
+  box-shadow: 5px 8px 10px #444;
+  background: #f6f6f6;
+}
+
+/**
+ * Layout for header
+ */
+#header {
+  position: relative;
+  /*margin-bottom: 44px;*/
+  /*height:110px;*/
+}
+
+.sitetitle {
+  position: absolute;
+  /*top: 6px;*/
+  left: 130px;
+  font-size: 66px;
+  /*font-size: 48px;*/
+}
+
+.siteslogan {
+  position: absolute;
+  top: 75px;
+  left: 130px;
+  font-family: georgia, serif;
+  font-style: italic;
+  color: #666;
+}
+
+
+/**
+ * Layout for main
+ */
+#main {
+  min-height: 22em;
+}
+
+
+/**
+ * Layout for footer
+ */
+#footer {
+  margin-top: 40px;
+  border-top: 1px solid #ccc;
+  padding-top: 22px;
+}
+
+.sitefooter {
+  color: #666;
+}
+
+
+/**
+ * For articles
+ */
+.article1 {
+  /*width: 700px;*/
+  /*border-right: 1px solid #ccc;*/
+  /*padding-right: 1em;*/
+  overflow:auto;
+}
+
+.article1 h1,
+.article1 h2 {
+  border-bottom: 1px solid #ccc;
+}
+
+.byline {
+  margin-top: 44px;
+  border-top: 1px dashed #ccc;
+  padding-top: 22px;
+  color: #666;
+  clear:both;
+}
+
+.byline p {
+  margin-top: 0;
+}
