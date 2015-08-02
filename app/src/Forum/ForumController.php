@@ -98,12 +98,14 @@ class ForumController implements \Anax\DI\IInjectionAware
     
     public function addTestDataAction() {
         //$now = gmdate('Y-m-d H:i:s');
-
+        
+        $now = date('Y-m-d H:i:s');
+        
         $this->views->addString('Testdata inläst i databasen');
         
         $this->theme->setTitle('Testdata');
         // set to verbose to see what is happening
-        // $this->db->setVerbose(); 
+         // $this->db->setVerbose(); 
         
         // test data question
         $this->db->insert(
@@ -115,7 +117,7 @@ class ForumController implements \Anax\DI\IInjectionAware
             'testfråga1',
             'Det här är frågetexten till testfråga1',
             1,
-            time()
+            $now
         ]);
 
         
@@ -129,14 +131,14 @@ class ForumController implements \Anax\DI\IInjectionAware
             1,
             'Det här är en svarstext1 kopplad till testfråga1',
             2,
-            time()
+            $now
         ]);
         
         $this->db->execute([
             1,
             'Det här är en svarstext2 kopplad till testfråga1',
             1,
-            time()
+            $now
         ]);
 
         // test data comment 
@@ -151,7 +153,7 @@ class ForumController implements \Anax\DI\IInjectionAware
             null,
             'Det här är en kommentarstext1 kopplad till testfråga1',
             2,
-            time()
+            $now
         ]);
         
         // test data answer comment 
@@ -160,7 +162,7 @@ class ForumController implements \Anax\DI\IInjectionAware
             1,
             'Det här är en kommentarstext1 kopplad till svar1 på fråga1',
             1,
-            time()
+            $now
         ]);
         
         $this->db->execute([
@@ -168,7 +170,7 @@ class ForumController implements \Anax\DI\IInjectionAware
             1,
             'Det här är en kommentarstext2 kopplad till svar1 på fråga1',
             1,
-            time()
+            $now
         ]);
 
         $this->db->execute([
@@ -176,7 +178,7 @@ class ForumController implements \Anax\DI\IInjectionAware
             2,
             'Det här är en kommentarstext1 kopplad till svar2 på fråga1',
             2,
-            time()
+            $now
         ]);
         
     }
@@ -184,11 +186,9 @@ class ForumController implements \Anax\DI\IInjectionAware
 
     public function viewAction($id)
     {
-        //set default timezone to get rid of error warning
-        date_default_timezone_set('Europe/Stockholm');
         
         $this->theme->setTitle("Fråga");
-        $this->views->addString('Här kollar vi på en fråga');
+        // $this->views->addString('Här kollar vi på en fråga');
         
         // a question,as an object
         $question = $this->question->find($id);
@@ -209,6 +209,8 @@ class ForumController implements \Anax\DI\IInjectionAware
             'answers' => $answers,
             'answerComments' => $answerComments
         ]);
+        
+        $this->views->addString('Lite text i en sidebar', 'sidebar');
 
     }
     

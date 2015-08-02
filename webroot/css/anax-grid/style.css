@@ -856,10 +856,12 @@ figure.rounded img {
   margin-bottom: 1em;
 }
 .wrap-question,
-.wrap-answer {
-  margin-bottom: 3em;
+.wrap-answer,
+.comments {
+  margin-bottom: 4em;
 }
 .comment {
+  font-size: smaller;
   border-top: 1px dotted;
   border-bottom: 1px dotted;
 }

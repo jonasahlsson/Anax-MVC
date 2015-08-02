@@ -30,9 +30,20 @@ class User extends \Anax\Users\User
      *  
      *  @return string
      */
-    public function fetchGravatar($id, $size = 40) {
+    public function fetchGravatar($id, $size = 40) 
+    {
     $user = $this->find($id);    
     return '<img src="http://www.gravatar.com/avatar/' . md5( strtolower( trim( $user->email ) ) ) . '?d=mm&s=' . $size . '">';
-}
+    }
  
-}
+    /**
+     *  Fetch username
+     *  
+     *  @return string
+     */
+    public function fetchName($id)
+    {
+        $user = $this->find($id);
+        return $user->name;
+    }
+}   

@@ -28,4 +28,7 @@ include(ANAX_APP_PATH . 'config/autoloader.php');
  */
 include(ANAX_INSTALL_PATH . 'src/functions.php'); 
 
-
+/**
+ *  Set default timezone
+ */
+date_default_timezone_set('Europe/Stockholm');
