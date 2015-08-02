@@ -1,11 +1,11 @@
 <?php
-namespace Anax\Users;
+namespace Joah\Forum;
  
 /**
- * Model for Users.
+ * Model for Users of the forum.
  *
  */
-class User extends \Anax\MVC\CDatabaseModel
+class User extends \Anax\Users\User
 {
  
  
@@ -24,5 +24,15 @@ class User extends \Anax\MVC\CDatabaseModel
         $this->db->setFetchModeClass(__CLASS__);
         return $this->db->fetchAll();
     }
+ 
+    /**
+     *  Fetch a user Gravatar
+     *  
+     *  @return string
+     */
+    public function fetchGravatar($id, $size = 40) {
+    $user = $this->find($id);    
+    return '<img src="http://www.gravatar.com/avatar/' . md5( strtolower( trim( $user->email ) ) ) . '?d=mm&s=' . $size . '">';
+}
  
 }

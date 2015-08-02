@@ -26,7 +26,8 @@ $di->setShared('db', function() {
 
 // create a user service
 $di->set('users', function () use ($di) {
-    $users = new \Anax\Users\User($di);
+    // $users = new \Anax\Users\User($di);
+    $users = new \Joah\Forum\User($di);
     $users->setDI($di);
     return $users;
 });
