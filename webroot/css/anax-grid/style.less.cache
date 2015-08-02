@@ -1,4 +1,4 @@
-a:4:{s:4:"root";s:10:"style.less";s:8:"compiled";s:41248:"html {
+a:4:{s:4:"root";s:10:"style.less";s:8:"compiled";s:41230:"html {
   font-family: sans-serif;
   -ms-text-size-adjust: 100%;
   -webkit-text-size-adjust: 100%;
@@ -851,12 +851,17 @@ figure.rounded img {
   -moz-border-radius: 50px;
   border-radius: 50px;
 }
-@font-face {
-  font-family: "Waltograph Font Family";
-  src: url(../../font/waltograph42.ttf) format("truetype");
+.question,
+.answer {
+  margin-bottom: 1em;
 }
-.disney {
-  font-family: "Waltograph Font Family", Verdana, Tahoma;
+.wrap-question,
+.wrap-answer {
+  margin-bottom: 3em;
+}
+.comment {
+  border-top: 1px dotted;
+  border-bottom: 1px dotted;
 }
 @font-face {
   font-family: 'FontAwesome';
@@ -2650,4 +2655,4 @@ figure.rounded img {
 .fa-medium:before {
   content: "\f23a";
 }
-";s:5:"files";a:26:{s:65:"C:\Apache24\htdocs\phpmvc\wgtotw\webroot\css\anax-grid\style.less";i:1438447650;s:69:"C:\Apache24\htdocs\phpmvc\wgtotw\webroot\css\anax-grid\normalize.less";i:1429213310;s:69:"C:\Apache24\htdocs\phpmvc\wgtotw\webroot\css\anax-grid\variables.less";i:1429426314;s:66:"C:\Apache24\htdocs\phpmvc\wgtotw\webroot\css\anax-grid\mixins.less";i:1429300055;s:70:"C:\Apache24\htdocs\phpmvc\wgtotw\webroot\css\anax-grid\css3mixins.less";i:1429300130;s:64:"C:\Apache24\htdocs\phpmvc\wgtotw\webroot\css\anax-grid\grid.less";i:1429350097;s:70:"C:\Apache24\htdocs\phpmvc\wgtotw\webroot\css\anax-grid\typography.less";i:1429303633;s:69:"C:\Apache24\htdocs\phpmvc\wgtotw\webroot\css\anax-grid\structure.less";i:1438447850;s:65:"C:\Apache24\htdocs\phpmvc\wgtotw\webroot\css\anax-grid\theme.less";i:1429454058;s:70:"C:\Apache24\htdocs\phpmvc\wgtotw\webroot\css\anax-grid\responsive.less";i:1429447492;s:66:"C:\Apache24\htdocs\phpmvc\wgtotw\webroot\css\anax-grid\navbar.less";i:1438448182;s:66:"C:\Apache24\htdocs\phpmvc\wgtotw\webroot\css\anax-grid\figure.less";i:1429212216;s:71:"C:\Apache24\htdocs\phpmvc\wgtotw\webroot\css\anax-grid\disney_font.less";i:1429213696;s:96:"C:\Apache24\htdocs\phpmvc\wgtotw\webroot\css\anax-grid\font-awesome-4.3.0\less\font-awesome.less";i:1429343757;s:93:"C:\Apache24\htdocs\phpmvc\wgtotw\webroot\css\anax-grid\font-awesome-4.3.0\less\variables.less";i:1429346578;s:90:"C:\Apache24\htdocs\phpmvc\wgtotw\webroot\css\anax-grid\font-awesome-4.3.0\less\mixins.less";i:1429343757;s:88:"C:\Apache24\htdocs\phpmvc\wgtotw\webroot\css\anax-grid\font-awesome-4.3.0\less\path.less";i:1429343757;s:88:"C:\Apache24\htdocs\phpmvc\wgtotw\webroot\css\anax-grid\font-awesome-4.3.0\less\core.less";i:1429343757;s:90:"C:\Apache24\htdocs\phpmvc\wgtotw\webroot\css\anax-grid\font-awesome-4.3.0\less\larger.less";i:1429343757;s:95:"C:\Apache24\htdocs\phpmvc\wgtotw\webroot\css\anax-grid\font-awesome-4.3.0\less\fixed-width.less";i:1429343757;s:88:"C:\Apache24\htdocs\phpmvc\wgtotw\webroot\css\anax-grid\font-awesome-4.3.0\less\list.less";i:1429343757;s:99:"C:\Apache24\htdocs\phpmvc\wgtotw\webroot\css\anax-grid\font-awesome-4.3.0\less\bordered-pulled.less";i:1429343757;s:92:"C:\Apache24\htdocs\phpmvc\wgtotw\webroot\css\anax-grid\font-awesome-4.3.0\less\animated.less";i:1429343757;s:99:"C:\Apache24\htdocs\phpmvc\wgtotw\webroot\css\anax-grid\font-awesome-4.3.0\less\rotated-flipped.less";i:1429343757;s:91:"C:\Apache24\htdocs\phpmvc\wgtotw\webroot\css\anax-grid\font-awesome-4.3.0\less\stacked.less";i:1429343757;s:89:"C:\Apache24\htdocs\phpmvc\wgtotw\webroot\css\anax-grid\font-awesome-4.3.0\less\icons.less";i:1429343757;}s:7:"updated";i:1438448191;}
+";s:5:"files";a:26:{s:67:"C:\Apache24\htdocs\wgtotw\Anax-MVC\webroot\css\anax-grid\style.less";i:1438521160;s:71:"C:\Apache24\htdocs\wgtotw\Anax-MVC\webroot\css\anax-grid\normalize.less";i:1429213310;s:71:"C:\Apache24\htdocs\wgtotw\Anax-MVC\webroot\css\anax-grid\variables.less";i:1429426314;s:68:"C:\Apache24\htdocs\wgtotw\Anax-MVC\webroot\css\anax-grid\mixins.less";i:1429300055;s:72:"C:\Apache24\htdocs\wgtotw\Anax-MVC\webroot\css\anax-grid\css3mixins.less";i:1429300130;s:66:"C:\Apache24\htdocs\wgtotw\Anax-MVC\webroot\css\anax-grid\grid.less";i:1429350097;s:72:"C:\Apache24\htdocs\wgtotw\Anax-MVC\webroot\css\anax-grid\typography.less";i:1429303633;s:71:"C:\Apache24\htdocs\wgtotw\Anax-MVC\webroot\css\anax-grid\structure.less";i:1438447850;s:67:"C:\Apache24\htdocs\wgtotw\Anax-MVC\webroot\css\anax-grid\theme.less";i:1429454058;s:72:"C:\Apache24\htdocs\wgtotw\Anax-MVC\webroot\css\anax-grid\responsive.less";i:1429447492;s:68:"C:\Apache24\htdocs\wgtotw\Anax-MVC\webroot\css\anax-grid\navbar.less";i:1438448182;s:68:"C:\Apache24\htdocs\wgtotw\Anax-MVC\webroot\css\anax-grid\figure.less";i:1429212216;s:67:"C:\Apache24\htdocs\wgtotw\Anax-MVC\webroot\css\anax-grid\forum.less";i:1438547171;s:98:"C:\Apache24\htdocs\wgtotw\Anax-MVC\webroot\css\anax-grid\font-awesome-4.3.0\less\font-awesome.less";i:1429343757;s:95:"C:\Apache24\htdocs\wgtotw\Anax-MVC\webroot\css\anax-grid\font-awesome-4.3.0\less\variables.less";i:1429346578;s:92:"C:\Apache24\htdocs\wgtotw\Anax-MVC\webroot\css\anax-grid\font-awesome-4.3.0\less\mixins.less";i:1429343757;s:90:"C:\Apache24\htdocs\wgtotw\Anax-MVC\webroot\css\anax-grid\font-awesome-4.3.0\less\path.less";i:1429343757;s:90:"C:\Apache24\htdocs\wgtotw\Anax-MVC\webroot\css\anax-grid\font-awesome-4.3.0\less\core.less";i:1429343757;s:92:"C:\Apache24\htdocs\wgtotw\Anax-MVC\webroot\css\anax-grid\font-awesome-4.3.0\less\larger.less";i:1429343757;s:97:"C:\Apache24\htdocs\wgtotw\Anax-MVC\webroot\css\anax-grid\font-awesome-4.3.0\less\fixed-width.less";i:1429343757;s:90:"C:\Apache24\htdocs\wgtotw\Anax-MVC\webroot\css\anax-grid\font-awesome-4.3.0\less\list.less";i:1429343757;s:101:"C:\Apache24\htdocs\wgtotw\Anax-MVC\webroot\css\anax-grid\font-awesome-4.3.0\less\bordered-pulled.less";i:1429343757;s:94:"C:\Apache24\htdocs\wgtotw\Anax-MVC\webroot\css\anax-grid\font-awesome-4.3.0\less\animated.less";i:1429343757;s:101:"C:\Apache24\htdocs\wgtotw\Anax-MVC\webroot\css\anax-grid\font-awesome-4.3.0\less\rotated-flipped.less";i:1429343757;s:93:"C:\Apache24\htdocs\wgtotw\Anax-MVC\webroot\css\anax-grid\font-awesome-4.3.0\less\stacked.less";i:1429343757;s:91:"C:\Apache24\htdocs\wgtotw\Anax-MVC\webroot\css\anax-grid\font-awesome-4.3.0\less\icons.less";i:1429343757;}s:7:"updated";i:1438547173;}

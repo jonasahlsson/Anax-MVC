@@ -851,12 +851,17 @@ figure.rounded img {
   -moz-border-radius: 50px;
   border-radius: 50px;
 }
-@font-face {
-  font-family: "Waltograph Font Family";
-  src: url(../../font/waltograph42.ttf) format("truetype");
+.question,
+.answer {
+  margin-bottom: 1em;
 }
-.disney {
-  font-family: "Waltograph Font Family", Verdana, Tahoma;
+.wrap-question,
+.wrap-answer {
+  margin-bottom: 3em;
+}
+.comment {
+  border-top: 1px dotted;
+  border-bottom: 1px dotted;
 }
 @font-face {
   font-family: 'FontAwesome';

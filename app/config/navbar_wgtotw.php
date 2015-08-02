@@ -42,7 +42,7 @@ return [
         // This is a menu item
         'about' => [
             'text'  =>'Om oss',
-            'url'   => $this->di->get('url')->create('flash'),
+            'url'   => $this->di->get('url')->create('about'),
             'title' => 'Om oss',
         ],
     ],

@@ -2,6 +2,8 @@
 *.sqlite
 *.log
 
+#cache
+*.cache
 
 # OS generated files 
 .DS_Store
