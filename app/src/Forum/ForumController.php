@@ -94,11 +94,13 @@ class ForumController implements \Anax\DI\IInjectionAware
     
     /**
      *  Add some test data
+     *  
+     *  @return void
      */
     
     public function addTestDataAction() {
-        //$now = gmdate('Y-m-d H:i:s');
         
+        //$now = time();
         $now = date('Y-m-d H:i:s');
         
         $this->views->addString('Testdata inläst i databasen');
@@ -183,14 +185,16 @@ class ForumController implements \Anax\DI\IInjectionAware
         
     }
     
-
+    /**
+     *  view a question with answers and comments.
+     */
     public function viewAction($id)
     {
         
         $this->theme->setTitle("Fråga");
         // $this->views->addString('Här kollar vi på en fråga');
         
-        // a question,as an object
+        // a question, as an object
         $question = $this->question->find($id);
 
         // comments belonging to question as array of object
@@ -210,101 +214,73 @@ class ForumController implements \Anax\DI\IInjectionAware
             'answerComments' => $answerComments
         ]);
         
-        $this->views->addString('Lite text i en sidebar', 'sidebar');
+        $this->views->addString('Lite text i en sidebar. Eventuellt lägga en knapp för att skapa en egen fråga här?', 'sidebar');
 
     }
     
-    // display comments for a page & form for new comment
-    public function displayAction($page, $add = null)
-    {   
-        //set default timezone to get rid of error warning
-        date_default_timezone_set('Europe/Stockholm');
-        
-        $this->theme->setTitle("Kommentera");
-        $this->views->add('comment/index');
-        $this->printAction($page);
-        
-        if(isset($add)) {
-            $this->addAction($page);
-        }
-    }
     
-    
-    // default page is no.1
-    public function indexAction($page = 1, $add = null)
-    {        
-        $this->displayAction($page, $add);
-    }
-
-
     /**
-     * Print comments.
-     * 
-     * @return void
+     *  Default action
      */
-    public function printAction($page)
-    {
-        $comments = $this->comment;
-        
-        // fetch comments
-        $all = $comments->findAll();
-
-        //$this->views->add('comment/print-comments-database', [
-        $this->views->add('comment/print-comments-database-gravatar', [
-            'comments' => $all,
-            'page' => $page,
-        ]);
-        
+    public function indexAction()
+    {        
+        // show overview as default
+        $this->overviewQuestionAction();
     }
-    
+
     
     /**
-     * Add a comment.
+     *  Print an question overview
+     *  
+     *  @return void
+     */
+    public function overviewQuestionAction()
+    {
+    $all = $this->question->findAll();
+    
+        $this->theme->setTitle('Översikt frågor');
+        $this->views->add('forum/overview-question', [
+            'title' => "Översikt frågor",
+            'questions' => $all,
+            
+        ]);
+    
+    }
+     
+        
+    /**
+     * Create a new question
      *
      * @return void
      */
-    public function addAction($page)
+    public function newQuestionAction()
     {
-
+        $this->theme->setTitle('Ställ en fråga!');
+        // test
+        $this->session->set('user_id', 1);
+        
+        
         $form = $this->di->form->create([], [
-            'name' => [
+            'title' => [
                 'type'        => 'text',
-                'label'       => 'Namn:',
+                'label'       => 'Titel:',
                 'required'    => true,
                 'validation'  => ['not_empty'],
-            ],
-            'mail' => [
-                'type'        => 'text',
-                'label'       => 'E-post:',
-                'required'    => true,
-                'validation'  => ['email_adress'],
-            ],
-            'web' => [
-                'type'        => 'text',
-                'label'       => 'Web:',
-                'required'    => false,
             ],
             'content' => [
                 'type'        => 'textarea',
-                'label'       => 'Kommentarstext:',
+                'label'       => 'Frågetext:',
                 'required'    => true,
                 'validation'  => ['not_empty'],
-            ],
-            'page' => [
-                'type'        => 'hidden',
-                'label'       => 'page',
-                'value'       => $page
             ],
             'spara' => [
                 'type'      => 'submit',
                 'callback'  => function ($form) {
-                    $res = $this->comment->save([
-                    'name' => $form->Value('name'),
-                    'mail' => $form->Value('mail'),
-                    'web' => $form->Value('web'),
+                    $res = $this->question->save([
+                    'title' => $form->Value('title'),
                     'content' => $form->Value('content'),
-                    'page' => $form->Value('page'),
-                    'timestamp' => time(),
+                    'user_id' => $this->session->get('user_id'),
+                    'timestamp' => date('Y-m-d H:i:s'),
                     ]);
 
                     //$form->saveInSession = true;
@@ -320,7 +296,7 @@ class ForumController implements \Anax\DI\IInjectionAware
         // if form was submitted
         if ($status === true) {
             //$form->AddOUtput("<p><i>Sparat!</i></p>");
-            $this->redirectTo("comment/index/{$form->Value('page')}");
+            $this->redirectTo("forum/view/{$this->question->id}");
         } 
         // If form could not be submitted.
         else if ($status === false) {
@@ -333,183 +309,111 @@ class ForumController implements \Anax\DI\IInjectionAware
         }
         
         // Print form
-        $this->di->views->add('comment/page', [
-        'title' => "Skriv din egna kommentar!",
+        $this->di->views->add('forum/page', [
+        'title' => "Ställ din fråga!",
         'content' => $form->getHTML()
-    ]);
+        ]);
 
     }
 
-    
-    
-    public function editAction($id)
+    /**
+     * Edit question
+     *
+     * @return void
+     */
+    public function editQuestionAction($id = null)
     {
-        //$this->db->setVerbose(); 
-        // fetch comment
-        $comment = $this->comment->find($id);
-        
-        //alert if no such commentId
-        $output = empty($comment) ? "Hittar ingen kommentar med id = $id" : null; 
+
+        $this->theme->setTitle('Redigera fråga');
+        // test
+        $this->session->set('user_id', 1);
+
+        // fetch question
+        $q = $this->question->find($id);
+
+        // check if question was found
+        if (empty($q)) {
+            die("question_id = '$id' not found");
+        }
         
         $form = $this->di->form->create([], [
-            'name' => [
+            'id' => [
+                'type'        => 'hidden',
+                'value'       => $id,
+                'label'       => 'id',
+            ],
+
+            'title' => [
                 'type'        => 'text',
-                'label'       => 'Namn:',
-                'value'       => $comment->name,
+                'value'       => $this->question->title,
+                'label'       => 'Titel:',
                 'required'    => true,
                 'validation'  => ['not_empty'],
-            ],
-            'mail' => [
-                'type'        => 'text',
-                'label'       => 'E-post:',
-                'value'       => $comment->mail,    
-                'required'    => true,
-                'validation'  => ['email_adress'],
-            ],
-            'web' => [
-                'type'        => 'text',
-                'label'       => 'Web:',
-                'value'       => $comment->web,
-                'required'    => false,
             ],
             'content' => [
                 'type'        => 'textarea',
-                'label'       => 'Kommentarstext:',
-                'value'       => $comment->content,
+                'value'       => $this->question->content,
+                'label'       => 'Frågetext:',
                 'required'    => true,
                 'validation'  => ['not_empty'],
             ],
-            'id' => [
-                'type'        => 'hidden',
-                'label'       => 'id',
-                'value'          => $comment->id,
-            ],
-            'page' => [
-                'type'        => 'hidden',
-                'label'       => 'page',
-                'value'       => $comment->page,
-            ],
             'spara' => [
                 'type'      => 'submit',
-                'callback'  => [$this, 'saveEdit'],
+                'callback'  => function ($form) {
+                    $res = $this->question->save([
+                    'id' => $form->Value('id'),
+                    'title' => $form->Value('title'),
+                    'content' => $form->Value('content'),
+                    'user_id' => $this->session->get('user_id'),
+                    'timestamp' => date('Y-m-d H:i:s'),
+                    ]);
+
+                    //$form->saveInSession = true;
+                    return $res;
+                }
             ],
-            /*
-            'submit-fail' => [
-                'type'      => 'submit',
-                'callback'  => [$this, 'callbackSubmitFail'],
-            ],
-            */
+
         ]);
-
-
+        
         // Check the status of the form
-        $form->check([$this, 'callbackSuccess'], [$this, 'callbackFail']);
-
-        $this->di->theme->setTitle("Redigera kommentar");
+        $status = $form->check();
+     
+        // if form was submitted
+        if ($status === true) {
+            //$form->AddOUtput("<p><i>Sparat!</i></p>");
+            $this->redirectTo("forum/view/{$this->question->id}");
+        } 
+        // If form could not be submitted.
+        else if ($status === false) {
+            // What to do when form could not be processed?
+            $form->AddOutput("<p><i>Något gick fel.</i></p>");
+            
+            $form->saveInSession = true;
+            
+            $this->redirectTo();
+        }
         
-        $this->di->views->addString("$output", 'main');
-        
-        $this->di->views->add('default/page', [
-            'title' => "Redigera kommentar",
-            'content' => $form->getHTML()
-        ]);
-    }
-
-
-    /**
-     * Callback for submit-button.
-     *
-     */
-    public function saveEdit($form)
-    {
-        /*
-        $form->AddOutput("<p><i>DoSubmit(): Form was submitted. Do stuff (save to database) and return true (success) or false (failed processing form)</i></p>");
-        $form->AddOutput("<p><b>id: " . $form->Value('id') . "</b></p>");
-        $form->AddOutput("<p><b>Namn: " . $form->Value('name') . "</b></p>");
-        $form->AddOutput("<p><b>E-post: " . $form->Value('mail') . "</b></p>");
-        $form->AddOutput("<p><b>Web: " . $form->Value('web') . "</b></p>");
-        $form->AddOutput("<p><b>Kommentar: " . $form->Value('content') . "</b></p>");
-        */
-        
-        $res = $this->comment->save([
-            'id' => $form->Value('id'),
-            'name' => $form->Value('name'),
-            'mail' => $form->Value('mail'),
-            'web' => $form->Value('web'),
-            'content' => $form->Value('content'),
-            'page' => $form->Value('page'),
-            'timestamp' => time(),
+        // Print form
+        $this->di->views->add('forum/page', [
+        'title' => "Ställ din fråga!",
+        'content' => $form->getHTML()
         ]);
 
-        //$form->saveInSession = true;
-        return $res;
     }
-
-
+    
 
     /**
-     * Callback for submit-button.
-     *
-     */
-    public function callbackSubmitFail($form)
-    {
-        $form->AddOutput("<p><i>DoSubmitFail(): Form was submitted but it failed to process/save/validate</i></p>");
-        return false;
-    }
-
-
-
-    /**
-     * Callback What to do if the form was submitted?
-     *
-     */
-    public function callbackSuccess($form)
-    {
-        //$form->AddOUtput("<p><i>Form was submitted and the callback method returned true.</i></p>");
-        $this->redirectTo("comment/index/{$form->Value('page')}");
-    }
-
-
-
-    /**
-     * Callback What to do when form could not be processed?
-     *
-     */
-    public function callbackFail($form)
-    {
-        $form->AddOutput("<p><i>Något gick fel.</i></p>");
-        $form->saveInSession = true;
-        $this->redirectTo();
-    }
-       
-
-
-        /**
-     * Remove comment.
+     * Delete question
      *
      * @return void
      */
-    public function removeAction($id)
+    public function deleteQuestionAction($id)
     {
-        // find page's page and use for redirect
-        $commentToDelete = $this->comment->find($id);
-        $page = $commentToDelete->page;
-        
-        $this->comment->delete($id);
+        // delete question
+        $this->question->delete($id);
 
-        $this->redirectTo("comment/index/$page");
+        // todo. delete comments and answers
+        $this->redirectTo("forum/overview-question");
     }
     
-    
-    /**
-     * Remove all comments from a page.
-     *
-     * @return void
-     */
-    public function removePageAction($page)
-    {
-        $this->comment->removePage($page);
-
-        $this->redirectTo("comment/index/$page");
-    }
 }

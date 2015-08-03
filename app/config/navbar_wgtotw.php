@@ -21,15 +21,15 @@ return [
         // This is a menu item
         'questions'  => [
             'text' => 'Frågor',
-            'url'   => $this->di->get('url')->create('report'),
+            'url'   => $this->di->get('url')->create('forum'),
             'title' => 'Frågor'
         ],
  
         // This is a menu item
         'tags' => [
-            'text'  =>'Kategorier',
-            'url'   => $this->di->get('url')->create('comment'),
-            'title' => 'Kategorier',
+            'text'  =>'Taggar',
+            'url'   => $this->di->get('url')->create('tag'),
+            'title' => 'Taggar',
         ],
 
         // This is a menu item
