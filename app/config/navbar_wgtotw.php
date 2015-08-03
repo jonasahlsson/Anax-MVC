@@ -22,7 +22,29 @@ return [
         'questions'  => [
             'text' => 'Frågor',
             'url'   => $this->di->get('url')->create('forum'),
-            'title' => 'Frågor'
+            'title' => 'Frågor',
+            
+            // Here we add the submenu, with some menu items, as part of a existing menu item
+            'submenu' => [
+
+                'items' => [
+
+                    // This is a menu item of the submenu
+                    'question-overview'  => [
+                        'text'  => 'Översikt',
+                        'url'   => $this->di->get('url')->create('forum/overview-question'),
+                        'title' => 'Url as internal route within this frontcontroller'
+                    ],
+
+                    // This is a menu item of the submenu
+                    'question-create'  => [
+                        'text'  => 'Skapa ny',
+                        'url'   => $this->di->get('url')->asset('forum/new-question'),
+                        'title' => 'Skapa en ny fråga',
+                    ],
+                ],
+            ],
+
         ],
  
         // This is a menu item

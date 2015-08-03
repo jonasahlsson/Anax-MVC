@@ -29,8 +29,12 @@ class ForumController implements \Anax\DI\IInjectionAware
         // load comment model
         $this->comment = new \Joah\Forum\Comment();
         $this->comment->setDI($this->di);
-        
 
+        // load tag model
+        $this->tag = new \Joah\Forum\Tag();
+        $this->tag->setDI($this->di);
+
+        
         // activate session
         $this->di->session(); // Will load the session service which also starts the session
 
@@ -89,8 +93,60 @@ class ForumController implements \Anax\DI\IInjectionAware
                 'timestamp' => ['datetime'],
             ]
         )->execute();
+        
+        // remove and create new tag table
+        $this->db->dropTableIfExists('tag')->execute();
+     
+        $this->db->createTable(
+            'tag',
+            [
+                'id' => ['integer', 'primary key', 'not null', 'auto_increment'],
+                'tag_text' => ['varchar(80)'],
+            ]
+        )->execute();
+        
+        // remove and create new tag2question table
+        $this->db->dropTableIfExists('tag2question')->execute();
+     
+        $this->db->createTable(
+            'tag2question',
+            [
+                'id' => ['integer', 'primary key', 'not null', 'auto_increment'],
+                'tag_id' => ['integer'],
+                'question_id' => ['integer'],
+            ]
+        )->execute();
+
     }
     
+    
+    public function testAction($id) 
+    {
+        // test route
+        echo "hej!";
+        
+        //fetch tags, arrives as array with standardobjects
+        $tags = $this->tag->fetchTags($id);
+        Dump($tags);
+        
+        //turn objects into a string. tags separated by #. #tag1 #tag2
+        $tagString = "";
+        foreach($tags as $tag) {
+            $tagString .= "#";
+            $tagString .= $tag->tag_text;
+            $tagString .= " ";
+        }
+        echo $tagString;
+        
+        // explode on # and trim
+        $tagArray = array_map('trim', (explode('#', $tagString)));
+        // remove null, false, and empty strings
+        $tagArray = array_filter( $tagArray, 'strlen' );
+        // make it lower case
+        //$tagArray = array_map('mb_strtolower', $tagArray);
+
+        Dump($tagArray);
+    }
     
     /**
      *  Add some test data
@@ -181,6 +237,44 @@ class ForumController implements \Anax\DI\IInjectionAware
             'Det här är en kommentarstext1 kopplad till svar2 på fråga1',
             2,
             $now
+        ]);
+
+        // test data tags 
+        $this->db->insert(
+            'tag',
+            ['tag_text']
+        );
+
+        $this->db->execute([
+            'inomhus'
+        ]);
+
+        $this->db->execute([
+            'utomhus'
+        ]);
+        
+        $this->db->execute([
+            'sniglar'
+        ]);
+        
+        $this->db->execute([
+            'husdjur'
+        ]);
+
+        // test data tags2question 
+        $this->db->insert(
+            'tag2question',
+            ['tag_id', 'question_id']
+        );
+
+        $this->db->execute([
+            1,
+            1
+        ]);
+
+        $this->db->execute([
+            4,
+            1
         ]);
         
     }
