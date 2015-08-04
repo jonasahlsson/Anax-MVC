@@ -123,29 +123,15 @@ class ForumController implements \Anax\DI\IInjectionAware
     public function testAction($id) 
     {
         // test route
-        echo "hej!";
+        echo "hej!<br>";
         
-        //fetch tags, arrives as array with standardobjects
-        $tags = $this->tag->fetchTags($id);
-        Dump($tags);
+        // fetch tag objects and turn into string
+        $tagString =$this->tag->tagsToString($id);
         
-        //turn objects into a string. tags separated by #. #tag1 #tag2
-        $tagString = "";
-        foreach($tags as $tag) {
-            $tagString .= "#";
-            $tagString .= $tag->tag_text;
-            $tagString .= " ";
-        }
         echo $tagString;
         
-        // explode on # and trim
-        $tagArray = array_map('trim', (explode('#', $tagString)));
-        // remove null, false, and empty strings
-        $tagArray = array_filter( $tagArray, 'strlen' );
-        // make it lower case
-        //$tagArray = array_map('mb_strtolower', $tagArray);
-
-        Dump($tagArray);
+        $this->tag->tagStringToArray($tagString);
+        
     }
     
     /**
@@ -340,8 +326,8 @@ class ForumController implements \Anax\DI\IInjectionAware
         ]);
     
     }
-     
-        
+    
+    
     /**
      * Create a new question
      *
@@ -367,19 +353,27 @@ class ForumController implements \Anax\DI\IInjectionAware
                 'required'    => true,
                 'validation'  => ['not_empty'],
             ],
+            'tags' => [
+                'type'        => 'text',
+                'label'       => 'Taggar (ex: #inomhus #sniglar)',
+            ],
+
             'spara' => [
                 'type'      => 'submit',
-                'callback'  => function ($form) {
-                    $res = $this->question->save([
-                    'title' => $form->Value('title'),
-                    'content' => $form->Value('content'),
-                    'user_id' => $this->session->get('user_id'),
-                    'timestamp' => date('Y-m-d H:i:s'),
-                    ]);
+                'callback'  => [$this, 'saveQuestion'],
+                    // this code section was pre tag support
+                    // 'callback'  => function ($form) {
+                    // $res = $this->question->save([
+                    // 'title' => $form->Value('title'),
+                    // 'content' => $form->Value('content'),
+                    // 'user_id' => $this->session->get('user_id'),
+                    // 'timestamp' => date('Y-m-d H:i:s'),
+                    // ]);
 
-                    //$form->saveInSession = true;
-                    return $res;
-                }
+                    // //$form->saveInSession = true;
+                    // return $res;
+                // }
+          
             ],
 
         ]);
@@ -409,7 +403,73 @@ class ForumController implements \Anax\DI\IInjectionAware
         ]);
 
     }
+    
+    
+    /**
+     *  callback used to Save question 
+     */
+    public function saveQuestion($form)
+    {
+        // save question
+        $res = $this->question->save([
+        'id' => null ==! $form->Value('id') ? $form->Value('id') : null,
+        'title' => $form->Value('title'),
+        'content' => $form->Value('content'),
+        'user_id' => $this->session->get('user_id'),
+        'timestamp' => date('Y-m-d H:i:s'),
+        ]);
+    
+        // fetch question_id
+        $question_id = null ==! $form->Value('id') ? $form->Value('id') : $this->db->lastInsertId();
+    
+        $this->saveTags($form, $question_id);
+        
+        // lägg till koll av saveTags. sätta And emellan? eller multiplicera? finns det en 0 så blir det inte 1.
+        return $res;
+    }
 
+    
+    /**
+     *  callback used to save tag
+     */
+    public function saveTags($form, $question_id)
+    {
+        // save tags
+        // should I put this code elsewhere?
+        //get string of tag(s) from form
+        $tagString = $form->value('tags');
+
+        // turn string into array
+        $tagArray = $this->tag->tagStringToArray($tagString);
+        
+        // check if tag already exists
+        $sql = "SELECT * FROM tag WHERE tag_text LIKE ?";
+            
+        // loopa through array of tags
+        foreach ($tagArray as $tag) {
+            
+            // check if tag already exists
+            $existingTags = $this->db->executeFetchAll($sql, [$tag]);
+            if(!empty($existingTags[0])) {
+                // tags already in table, store id
+                $tagID = $existingTags[0]->id;
+            }
+            else {
+                // if not already there
+                // add tag to tag table
+                $this->db->insert('tag', ['tag_text'] , [$tag]);
+                $this->db->execute();
+                // store id of tag
+                $tagID = $this->db->lastInsertId();
+            }
+        
+            // add tag_id and question_id to tag2question
+            $this->db->insert('tag2question', ['tag_id' => $tagID, 'question_id' => $question_id]);
+            $this->db->execute();
+        }        
+    }
+    
+    
     /**
      * Edit question
      *
@@ -451,20 +511,28 @@ class ForumController implements \Anax\DI\IInjectionAware
                 'required'    => true,
                 'validation'  => ['not_empty'],
             ],
+            'tags' => [
+                'type'        => 'text',
+                'value'       => $this->tag->tagsToString($id),
+                'label'       => 'Taggar (ex: #inomhus #sniglar)',
+            ],
+            
+            
             'spara' => [
                 'type'      => 'submit',
-                'callback'  => function ($form) {
-                    $res = $this->question->save([
-                    'id' => $form->Value('id'),
-                    'title' => $form->Value('title'),
-                    'content' => $form->Value('content'),
-                    'user_id' => $this->session->get('user_id'),
-                    'timestamp' => date('Y-m-d H:i:s'),
-                    ]);
+                'callback'  => [$this, 'saveQuestion'],
+                // 'callback'  => function ($form) {
+                    // $res = $this->question->save([
+                    // 'id' => $form->Value('id'),
+                    // 'title' => $form->Value('title'),
+                    // 'content' => $form->Value('content'),
+                    // 'user_id' => $this->session->get('user_id'),
+                    // 'timestamp' => date('Y-m-d H:i:s'),
+                    // ]);
 
-                    //$form->saveInSession = true;
-                    return $res;
-                }
+                    // //$form->saveInSession = true;
+                    // return $res;
+                // }
             ],
 
         ]);
