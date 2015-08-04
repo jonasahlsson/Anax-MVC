@@ -361,19 +361,6 @@ class ForumController implements \Anax\DI\IInjectionAware
             'spara' => [
                 'type'      => 'submit',
                 'callback'  => [$this, 'saveQuestion'],
-                    // this code section was pre tag support
-                    // 'callback'  => function ($form) {
-                    // $res = $this->question->save([
-                    // 'title' => $form->Value('title'),
-                    // 'content' => $form->Value('content'),
-                    // 'user_id' => $this->session->get('user_id'),
-                    // 'timestamp' => date('Y-m-d H:i:s'),
-                    // ]);
-
-                    // //$form->saveInSession = true;
-                    // return $res;
-                // }
-          
             ],
 
         ]);
@@ -436,6 +423,11 @@ class ForumController implements \Anax\DI\IInjectionAware
     {
         // save tags
         // should I put this code elsewhere?
+
+        // clear old entries in tag2question
+        $this->db->delete('tag2question', "question_id = $question_id");
+        $this->db->execute();
+        
         //get string of tag(s) from form
         $tagString = $form->value('tags');
 
@@ -445,7 +437,7 @@ class ForumController implements \Anax\DI\IInjectionAware
         // check if tag already exists
         $sql = "SELECT * FROM tag WHERE tag_text LIKE ?";
             
-        // loopa through array of tags
+        // loop through array of tags
         foreach ($tagArray as $tag) {
             
             // check if tag already exists
@@ -462,7 +454,7 @@ class ForumController implements \Anax\DI\IInjectionAware
                 // store id of tag
                 $tagID = $this->db->lastInsertId();
             }
-        
+   
             // add tag_id and question_id to tag2question
             $this->db->insert('tag2question', ['tag_id' => $tagID, 'question_id' => $question_id]);
             $this->db->execute();
@@ -521,18 +513,6 @@ class ForumController implements \Anax\DI\IInjectionAware
             'spara' => [
                 'type'      => 'submit',
                 'callback'  => [$this, 'saveQuestion'],
-                // 'callback'  => function ($form) {
-                    // $res = $this->question->save([
-                    // 'id' => $form->Value('id'),
-                    // 'title' => $form->Value('title'),
-                    // 'content' => $form->Value('content'),
-                    // 'user_id' => $this->session->get('user_id'),
-                    // 'timestamp' => date('Y-m-d H:i:s'),
-                    // ]);
-
-                    // //$form->saveInSession = true;
-                    // return $res;
-                // }
             ],
 
         ]);
