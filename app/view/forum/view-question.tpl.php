@@ -8,6 +8,14 @@
             <div class='question'>
                 <p><?=$question->content ?></p>
                 
+                <?php if (is_array($tags)) : ?>
+                    <ul class='tags'>
+                        <?php foreach($tags as $tag): ?>
+                            <li class='tag'><?=$tag->tag_text ?></li>
+                        <?php endforeach; ?>
+                    </ul>
+                <?php endif; ?>
+                
                 <?=$this->users->fetchGravatar($question->user_id);?>
                 <?=$this->users->fetchName($question->user_id); ?>
                 <?=$question->timestamp ?>

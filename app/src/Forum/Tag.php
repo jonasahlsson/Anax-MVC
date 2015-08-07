@@ -65,4 +65,70 @@ class Tag extends \Anax\MVC\CDatabaseModel
         
         return $array;
     }
+
+    
+    /**
+     * count tags
+     *
+     * @return array of tag object
+     */
+    public function countTags()
+    {
+        // find tags, count them, order by popularity
+        $sql = "SELECT tag_id, tag_text, count(*) as count FROM tag2question INNER JOIN tag ON tag2question.tag_id = tag.id 
+            GROUP BY tag_id
+            ORDER BY count DESC"; 
+        $params = [];
+        
+        //$this->db->setFetchMode(\PDO::FETCH_ASSOC);
+        return $this->db->executeFetchAll($sql, $params);
+    }    
+    
+    /**
+     *  Find question by tags
+     *  
+     *  @return array 
+     */
+    public function findQuestionByTag($tag_id)
+    {
+    // find questions associated with a tag_id
+        $sql = "SELECT t.tag_text, t2q.question_id, q.title, q.content, q.user_id, q.timestamp, t2q.tag_id 
+            FROM tag as t
+            LEFT OUTER JOIN tag2question AS t2q
+            ON t2q.tag_id = t.id
+            LEFT OUTER JOIN question as q
+            ON t2q.question_id = q.id
+            WHERE t2q.tag_id = ?
+            ORDER BY q.id DESC; "; 
+        $params = [$tag_id];
+        
+            // $sqlOrig = '
+      // SELECT 
+        // M.*,
+        // GROUP_CONCAT(G.name) AS genre
+      // FROM Movie AS M
+        // LEFT OUTER JOIN Movie2Genre AS M2G
+          // ON M.id = M2G.idMovie
+        // INNER JOIN Genre AS G
+          // ON M2G.idGenre = G.id
+    // ';
+        
+        
+        
+        //$this->db->setFetchMode(\PDO::FETCH_ASSOC);
+        return $this->db->executeFetchAll($sql, $params);
+        //Dump($test);
+    
+    }
+    
+    /**
+     *  Fetch name of tag
+     *  
+     *  @return string
+     */
+    public function fetchTagText($id)
+    {
+        $tag = $this->find($id);
+        return $tag->tag_text;
+    }
 }

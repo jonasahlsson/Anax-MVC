@@ -26,6 +26,13 @@
 </div>
 <?php endif; ?>
 
+<?php if ($this->views->hasContent('flash')) : ?>
+<div id='flash'>
+<?php $this->views->render('flash')?>
+</div>
+<?php endif; ?>
+
+
 <div id='main'>
 <?php if(isset($main)) echo $main?>
 <?php $this->views->render('main')?>

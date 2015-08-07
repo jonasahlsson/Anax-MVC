@@ -44,7 +44,8 @@ $di->set('ForumController', function() use ($di) {
 // users
 // Create usercontroller
 $di->set('UsersController', function() use ($di) {
-    $controller = new \Anax\Users\UsersController();
+    // $controller = new \Anax\Users\UsersController();
+    $controller = new \Joah\Forum\UsersController();
     $controller->setDI($di);
     return $controller;
 });

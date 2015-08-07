@@ -159,7 +159,7 @@ class ForumController implements \Anax\DI\IInjectionAware
      
         $this->db->execute([
             'testfråga1',
-            'Det här är frågetexten till testfråga1',
+            'Det här är en **frågetext** till *testfråga1*',
             1,
             $now
         ]);
@@ -173,14 +173,14 @@ class ForumController implements \Anax\DI\IInjectionAware
         
         $this->db->execute([
             1,
-            'Det här är en svarstext1 kopplad till testfråga1',
+            'Det här är en **svarstext1** kopplad till *testfråga1*',
             2,
             $now
         ]);
         
         $this->db->execute([
             1,
-            'Det här är en svarstext2 kopplad till testfråga1',
+            'Det här är en **svarstext2** kopplad till *testfråga1*',
             1,
             $now
         ]);
@@ -195,7 +195,7 @@ class ForumController implements \Anax\DI\IInjectionAware
         $this->db->execute([
             1,
             null,
-            'Det här är en kommentarstext1 kopplad till testfråga1',
+            'Det här är en **kommentarstext1** kopplad till *testfråga1*',
             2,
             $now
         ]);
@@ -204,7 +204,7 @@ class ForumController implements \Anax\DI\IInjectionAware
         $this->db->execute([
             1,
             1,
-            'Det här är en kommentarstext1 kopplad till svar1 på fråga1',
+            'Det här är en **kommentarstext1** kopplad till svar1 på *fråga1*',
             1,
             $now
         ]);
@@ -212,7 +212,7 @@ class ForumController implements \Anax\DI\IInjectionAware
         $this->db->execute([
             1,
             1,
-            'Det här är en kommentarstext2 kopplad till svar1 på fråga1',
+            'Det här är en **kommentarstext2** kopplad till svar1 på *fråga1*',
             1,
             $now
         ]);
@@ -220,7 +220,7 @@ class ForumController implements \Anax\DI\IInjectionAware
         $this->db->execute([
             1,
             2,
-            'Det här är en kommentarstext1 kopplad till svar2 på fråga1',
+            'Det här är en **kommentarstext1** kopplad till svar2 på *fråga1*',
             2,
             $now
         ]);
@@ -277,6 +277,9 @@ class ForumController implements \Anax\DI\IInjectionAware
         // a question, as an object
         $question = $this->question->find($id);
 
+        // fetch tags
+        $tags = $this->tag->fetchTags($id);
+        
         // comments belonging to question as array of object
         $questionComments = $this->comment->findQuestionComments($id);
         
@@ -286,9 +289,29 @@ class ForumController implements \Anax\DI\IInjectionAware
         // comments belonging to answers as array of object
         $answerComments = $this->comment->findAnswerComments($id);
         
+        // run content through markdown filter
+        // question
+        $question->content = $this->textFilter->doFilter($question->content, 'markdown');
+
+        // questionComments
+        foreach($questionComments as $comment) {
+            $comment->content = $this->textFilter->doFilter($comment->content, 'markdown');
+        }
+        
+        // answers
+        foreach($answers as $answer) {
+            $answer->content = $this->textFilter->doFilter($answer->content, 'markdown');
+        }
+        
+        // answerComments
+        foreach($answerComments as $comment) {
+            $comment->content = $this->textFilter->doFilter($comment->content, 'markdown');
+        }
+
         
         $this->views->add('forum/view-question', [
             'question' => $question,
+            'tags' => $tags,
             'questionComments' => $questionComments,
             'answers' => $answers,
             'answerComments' => $answerComments
@@ -310,13 +333,19 @@ class ForumController implements \Anax\DI\IInjectionAware
 
     
     /**
-     *  Print an question overview
+     *  Display overview of questions
      *  
      *  @return void
      */
     public function overviewQuestionAction()
     {
-    $all = $this->question->findAll();
+        $all = $this->question->findAll();
+
+        // markdown filter
+        foreach($all as $question) {
+            $question->content = $this->textFilter->doFilter($question->content, 'markdown');
+        }
+    
     
         $this->theme->setTitle('Översikt frågor');
         $this->views->add('forum/overview-question', [
@@ -553,9 +582,57 @@ class ForumController implements \Anax\DI\IInjectionAware
     {
         // delete question
         $this->question->delete($id);
-
         // todo. delete comments and answers
+        
         $this->redirectTo("forum/overview-question");
     }
+
+    
+    /**
+     *  Display overview of tags
+     *  
+     *  @return void
+     */
+    public function overviewTagAction()
+    {
+        $this->theme->setTitle('Översikt taggar');
+
+        // fetch counted tags
+        $tags = $this->tag->countTags();
+            
+        $this->theme->setTitle('Översikt taggar');
+        $this->views->add('forum/overview-tag', [
+            'title' => "Översikt taggar",
+            'tags' => $tags,
+            
+        ]);
+    
+    }
+
+    /**
+     *  view question associated with an tag
+     */
+    public function viewTagAction($tag_id)
+    {
+        $this->theme->setTitle('Tagg');
+        $questions = $this->tag->findQuestionByTag($tag_id);
+
+        // questionComments
+        foreach($questions as $question) {
+            $question->content = $this->textFilter->doFilter($question->content, 'markdown');
+        };
+        
+        
+        $this->views->add('forum/view-question-by-tag', [
+            'title' => "Frågor med tagg #{$this->tag->find($tag_id)->tag_text}",
+            'questions' => $questions
+        ]);
+        
+        $this->views->addString('Lite text i en sidebar. Här kanske jag kan lägga in en lista på populära taggar?', 'sidebar');
+
+    }
+
+    
+    
     
 }

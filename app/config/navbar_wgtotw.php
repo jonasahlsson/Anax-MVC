@@ -50,15 +50,36 @@ return [
         // This is a menu item
         'tags' => [
             'text'  =>'Taggar',
-            'url'   => $this->di->get('url')->create('tag'),
+            'url'   => $this->di->get('url')->create('forum/overview-tag'),
             'title' => 'Taggar',
         ],
 
         // This is a menu item
         'user' => [
             'text'  =>'Användare',
-            'url'   => $this->di->get('url')->create('users'),
+            'url'   => $this->di->get('url')->create('users/list'),
             'title' => 'Användare',
+            
+            // Here we add the submenu, with some menu items, as part of a existing menu item
+            'submenu' => [
+
+                'items' => [
+
+                    // This is a menu item of the submenu
+                    'userlist'  => [
+                        'text'  => 'Översikt',
+                        'url'   => $this->di->get('url')->create('users/list'),
+                        'title' => 'Lista användare',
+                    ],
+
+                    // This is a menu item of the submenu
+                    'question-create'  => [
+                        'text'  => 'Skapa ny',
+                        'url'   => $this->di->get('url')->asset('users/add'),
+                        'title' => 'Skapa en ny användare',
+                    ],
+                ],
+            ],
         ],
 
         // This is a menu item
