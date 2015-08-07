@@ -49,7 +49,7 @@ class CUserForm extends \Mos\HTMLForm\CForm
             ],
             
             'password' => [
-                'type'        => 'text',
+                'type'        => 'password',
                 'label'       => 'Lösenord:',
                 'required'    => true,
                 'validation'  => ['not_empty'],

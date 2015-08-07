@@ -22,6 +22,30 @@ class UsersController extends \Anax\Users\UsersController implements \Anax\DI\II
         // $this->users->setDI($this->di);
     }
     
+    /**
+     *  testaction
+     */
+    public function testAction($acronym, $password)
+    {
+        // dump($this->users->fetchByAcronym('admin'));
+        
+        // test login
+        // $this->users->login($acronym, $password);
+        // Dump($_SESSION['user']);
+        // $truefalls = $this->users->isLoggedIn();
+        // echo $truefalls . "<br>";
+        // $verifyLoggedInAs = $this->users->verifyLoggedInAs(1);
+        // echo "inloggad som 1?:" . $verifyLoggedInAs . "<--<br>";
+        // // test logout
+        // $this->users->logout();
+        // // Dump($_SESSION['user']);
+        // $truefalls = $this->users->isLoggedIn();
+        // echo "-->:" . $truefalls . "<--<br>";
+        // $verifyLoggedInAs = $this->users->verifyLoggedInAs(1);
+        // echo "inloggad som 1?:" . $verifyLoggedInAs . "<--<br>";
+    }
+    
+    
     // default route
     public function indexAction($acronym = null) {
         
