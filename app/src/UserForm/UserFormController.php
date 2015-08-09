@@ -42,4 +42,25 @@ class UserFormController
         ]);
     }
 
+    /**
+     * Login
+     *
+     */
+    public function LoginAction()
+    {
+        $this->di->session();
+        
+        $form = new \Joah\UserForm\CLoginForm();
+        $form->setDI($this->di);
+        
+        $form->check();
+
+        $this->di->theme->setTitle("Inloggning");
+        $this->di->views->add('users/page', [
+            'title' => "Inloggning",
+            'content' => $form->getHTML()
+        ]);
+    }
+    
+    
 }

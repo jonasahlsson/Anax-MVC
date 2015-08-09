@@ -10,7 +10,8 @@
                 <?=$this->users->fetchGravatar($question->user_id);?>
                 <?=$this->users->fetchName($question->user_id); ?>
                 <?=$question->timestamp ?>
-            </li>    
+            </li>
+            <hr>
         <?php endforeach; ?>        
     </ul>
 <?php endif;?>    

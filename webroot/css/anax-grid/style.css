@@ -458,14 +458,7 @@ hr {
 #main {
   display: inline;
   float: left;
-  width: 64.583333333333%;
-  margin: 0 1.0416666666667%;
-  margin-bottom: 22px;
-}
-#sidebar {
-  display: inline;
-  float: left;
-  width: 31.25%;
+  width: 97.916666666667%;
   margin: 0 1.0416666666667%;
   margin-bottom: 22px;
 }

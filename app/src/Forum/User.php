@@ -7,7 +7,8 @@ namespace Joah\Forum;
  */
 class User extends \Anax\Users\User
 {
- 
+    const SESSION_VARIABLE = 'user';
+    
     /**
      *  Fetch a user Gravatar
      *  
@@ -38,21 +39,21 @@ class User extends \Anax\Users\User
     {
         //verify password
         $res = $this->verifyPassword($acronym, $password);
-        
+
         // put user data in session
         if($res) {
-            $_SESSION['user'] = [
+        
+            
+            $this->session->set(self::SESSION_VARIABLE, [
                                 'acronym' => $this->acronym, 
                                 'name' => $this->name,
                                 'id' => $this->id
-                                ];
-            
-
-        echo "inloggad";
+                                ]);
+        return true;
         }
         
         else {
-            echo "ej inloggad, något stämde inte";
+            return false;
         }
         
     }
@@ -64,7 +65,17 @@ class User extends \Anax\Users\User
     
     public function logout() 
     {
-        unset($_SESSION['user']);
+        //unset session variable and return true 
+        // if(isset($_SESSION['user'])) {
+        if($this->session->has(self::SESSION_VARIABLE)) {
+            $this->session->set(self::SESSION_VARIABLE, []);
+            // unset($_SESSION['user']);
+            return true;
+        }
+        //if session variable missing noone was logged in. return false
+            else {
+            return false;
+            }
     }
     
     
@@ -87,14 +98,18 @@ class User extends \Anax\Users\User
     public function verifyPassword($acronym, $password)
     {
         //fetch user
-        $this->fetchByAcronym($acronym);
+        $user = $this->fetchByAcronym($acronym);
+
+        // no such user.
+        if (empty($user)) {
+            return false;
+        }
         
-        //verify password
+        // verify password
         if(password_verify($password, $this->password)){
             return true;
         }
         else {
-            echo "password mismatch";
             return false;
         }        
     }    

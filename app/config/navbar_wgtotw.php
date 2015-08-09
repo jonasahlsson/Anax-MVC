@@ -73,7 +73,14 @@ return [
                     ],
 
                     // This is a menu item of the submenu
-                    'question-create'  => [
+                    'login'  => [
+                        'text'  => 'Logga in',
+                        'url'   => $this->di->get('url')->asset('users/login'),
+                        'title' => 'Logga in med användarnamn och lösenord',
+                    ],
+                    
+                    // This is a menu item of the submenu
+                    'user-create'  => [
                         'text'  => 'Skapa ny',
                         'url'   => $this->di->get('url')->asset('users/add'),
                         'title' => 'Skapa en ny användare',

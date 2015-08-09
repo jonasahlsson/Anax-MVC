@@ -16,6 +16,12 @@ $app->url->setUrlType(\Anax\Url\CUrl::URL_CLEAN);
 // Länka in navbar
 $app->navbar->configure(ANAX_APP_PATH . 'config/navbar_wgtotw.php');
 
+/**
+ *  Start a session
+ */
+$di->session();
+// dump($_SESSION);
+
 // create database connection
 $di->setShared('db', function() {
     $db = new \Mos\Database\CDatabaseBasic();
@@ -31,6 +37,15 @@ $di->set('users', function () use ($di) {
     $users->setDI($di);
     return $users;
 });
+
+// // create question model
+// $di->set('question', function () use ($di) {
+    // // $users = new \Anax\Users\User($di);
+    // $question = new \Joah\Forum\Question($di);
+    // $question->setDI($di);
+    // return $question;
+// });
+
 
 
 // forum
@@ -64,13 +79,13 @@ $app->router->add('', function() use ($app) {
         'content' => $content,
     ]);
     
-    // sidebar
-    $content = $app->fileContent->get('forum/sidebar.md');
-    $content = $app->textFilter->doFilter($content, 'shortcode, markdown');
+    // // sidebar
+    // $content = $app->fileContent->get('forum/sidebar.md');
+    // $content = $app->textFilter->doFilter($content, 'shortcode, markdown');
     
-    $app->views->add('forum/content', [
-        'content' => $content,
-    ], 'sidebar');
+    // $app->views->add('forum/content', [
+        // 'content' => $content,
+    // ], 'sidebar');
     
 });
 
@@ -95,10 +110,6 @@ $app->router->add('about', function() use ($app) {
     ], 'sidebar');
     
 });
-
-
-
-
 
 
 $app->router->handle();

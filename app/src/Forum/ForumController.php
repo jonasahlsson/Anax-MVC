@@ -120,17 +120,12 @@ class ForumController implements \Anax\DI\IInjectionAware
     }
     
     
-    public function testAction($id) 
+    public function testAction($id = null) 
     {
         // test route
-        echo "hej!<br>";
+        echo "hej från test<br>";
         
-        // fetch tag objects and turn into string
-        $tagString =$this->tag->tagsToString($id);
-        
-        echo $tagString;
-        
-        $this->tag->tagStringToArray($tagString);
+        dump($this->session->get('user'));
         
     }
     
@@ -317,7 +312,7 @@ class ForumController implements \Anax\DI\IInjectionAware
             'answerComments' => $answerComments
         ]);
         
-        $this->views->addString('Lite text i en sidebar. Eventuellt lägga en knapp för att skapa en egen fråga här?', 'sidebar');
+        // $this->views->addString('Lite text i en sidebar. Eventuellt lägga en knapp för att skapa en egen fråga här?', 'sidebar');
 
     }
     
@@ -628,11 +623,34 @@ class ForumController implements \Anax\DI\IInjectionAware
             'questions' => $questions
         ]);
         
-        $this->views->addString('Lite text i en sidebar. Här kanske jag kan lägga in en lista på populära taggar?', 'sidebar');
+        // $this->views->addString('Lite text i en sidebar. Här kanske jag kan lägga in en lista på populära taggar?', 'sidebar');
 
     }
 
+    /**
+     *  Fetch user contributions. Questions, Answers, and comments
+     */
+    public function fetchUserContribution($user_id)
+    {
+        // creates objects
+        $this->initialize();
+        
+        $questions = $this->question->findQuestionByUser($user_id);
+        $answers = $this->answer->findAnswerByUser($user_id);
+        $comments = $this->comment->findCommentByUser($user_id);
+        
+        return ['questions' => $questions, 'answers' => $answers, 'comments' => $comments];
+        
+    }
+    
+    public function getQuestion() {
+        return $this->question;
+    }
     
     
-    
+    public function test($var)
+    {       
+        $this->initialize();
+        return $var;
+    }
 }

@@ -204,40 +204,27 @@ class UsersController extends \Anax\Users\UsersController implements \Anax\DI\II
      */
     public function idAction($id = null)
     {
+        if(empty($id)) {
+            die('Missing id');
+        }
+        
         $this->initialize();
      
         $user = $this->users->find($id);
-     
+        
+        extract($this->di->ForumController->fetchUserContribution($id));
+        
+        // dump($questions);
+        // dump($answers);
+        // dump($comments);
+        
         $this->theme->setTitle("Visa användare");
-        $this->views->add('users/view', [
+        $this->views->add('forum/view-user', [
             'user' => $user,
-            'title' => "Visa användare med id={$user->id}",
-            'links' => [
-                [
-                    'href' => $this->url->create("users/update/{$user->id}"),
-                    'text' => "Uppdatera",
-                ],
-                [
-                    'href' => $this->url->create("users/activate/{$user->id}"),
-                    'text' => "Aktivera",
-                ],
-                [
-                    'href' => $this->url->create("users/inactivate/{$user->id}"),
-                    'text' => "Inaktivera",
-                ],
-                [
-                    'href' => $this->url->create("users/softDelete/{$user->id}"),
-                    'text' => "Soft-delete",
-                ],
-                [
-                    'href' => $this->url->create("users/undelete/{$user->id}"),
-                    'text' => "Ångra soft-delete",
-                ],
-                [
-                    'href' => $this->url->create("users/delete/{$user->id}"),
-                    'text' => "Permanent delete",
-                ],
-            ],
+            'title' => "Användare: " . $user->name,
+            'questions' => $questions,
+            'answers' => $answers,
+            'comments' => $comments
         ]);
     }
     
@@ -477,4 +464,19 @@ class UsersController extends \Anax\Users\UsersController implements \Anax\DI\II
             'title' => "Users that are inactive",
         ]);
     }
+    
+    /**
+     * Login user.
+     *
+     * @return void
+     */
+    public function loginAction()
+    {
+        // display userform
+        $controller = new \Joah\UserForm\UserFormController();
+        $controller->setDI($this->di);
+        $controller->loginAction();
+        
+    }
+
 }

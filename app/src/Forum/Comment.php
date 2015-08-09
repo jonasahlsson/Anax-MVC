@@ -46,5 +46,21 @@ class Comment extends \Anax\MVC\CDatabaseModel
         $this->db->setFetchModeClass(__CLASS__);
         return $this->db->fetchAll();
     }
+    
+    /**
+     * Find and return comments made by user
+     *
+     * @return array
+     */
+    public function findCommentByUser($user_id)
+    {
+        $this->db->select()
+                ->from($this->getSource())
+                ->where('user_id = ?');
+                
+        $this->db->execute([$user_id]);
+        $this->db->setFetchModeClass(__CLASS__);
+        return $this->db->fetchAll();
+    }
 
 }
