@@ -12,6 +12,11 @@ class CUserForm extends \Mos\HTMLForm\CForm
         \Anax\MVC\TRedirectHelpers;
     
     private $user;
+
+    
+
+    
+    
     
     /**
      * Constructor
@@ -19,6 +24,7 @@ class CUserForm extends \Mos\HTMLForm\CForm
      */
     public function __construct($user = null)
     {
+
         $this->user = $user;
         $acronym = isset($user->acronym) ? htmlentities($user->acronym) : null;
         $name = isset($user->name) ? htmlentities($user->name) : null;
@@ -38,16 +44,23 @@ class CUserForm extends \Mos\HTMLForm\CForm
                 'label'       => 'Användarnamn:',
                 'value'       => $acronym,
                 'required'    => true,
-                'validation'  => ['not_empty'],
+                // allow only letters, numbers, ' ', '-' and '_'
+                'validation' => array('not_empty', 'custom_test' => array('message' => 'Please use only letters and numbers.', 'test' => 'return ctype_alnum(str_replace(array(" ","-","_"), "", $value));')),
+                // 'validation'  => ['not_empty'] 
+                // 'validation'  => ['not_empty', 'alphaNumeric'],
+                // 'validation' => array('not_empty', 'custom_test' => array('message' => 'Please use only letters and numbers.', 'test' => 'testForAlphaNumeric')),
+                // 'validation' => array('not_empty', 'custom_test' => array('message' => 'Please use only letters and numbers.', 'test' => 'return ctype_alnum($value);')),
+                
             ],
             'name' => [
                 'type'        => 'text',
                 'label'       => 'Namn:',
                 'value'       => $name,
                 'required'    => true,
-                'validation'  => ['not_empty'],
+                // 'validation'  => ['not_empty'] 
+                // allow only letters, numbers, ' ', '-' and '_'
+                'validation' => array('not_empty', 'custom_test' => array('message' => 'Please use only letters and numbers.', 'test' => 'return ctype_alnum(str_replace(array(" ","-","_"), "", $value));')),
             ],
-            
             'password' => [
                 'type'        => 'password',
                 'label'       => 'Lösenord:',
@@ -165,4 +178,13 @@ class CUserForm extends \Mos\HTMLForm\CForm
 
         $this->redirectTo();
     }
+    
+        
+    public function testForAlphaNumeric($string)
+    {
+        // return ctype_alnum($string);
+        return true;
+    }
+    
+    
 }

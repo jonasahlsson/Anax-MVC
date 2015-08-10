@@ -479,4 +479,18 @@ class UsersController extends \Anax\Users\UsersController implements \Anax\DI\II
         
     }
 
+    /**
+     * Logout user.
+     *
+     * @return void
+     */
+    public function logoutAction()
+    {
+        // display userform
+        $controller = new \Joah\UserForm\UserFormController();
+        $controller->setDI($this->di);
+        $controller->logoutAction();
+        
+    }
+  
 }

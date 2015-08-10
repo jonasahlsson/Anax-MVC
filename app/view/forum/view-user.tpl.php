@@ -8,6 +8,8 @@
         Användarnamn: <?=$user->acronym ?>
         <br>
         Namn: <?=$user->name ?>
+        <br>
+        <a href='<?=$this->url->create("users/edit/{$user->id}")?>'>Redigera</a>
     </div>
     <hr>
     <div class='user-contributions'>

@@ -589,6 +589,10 @@ img.sitelogo {
 .wrap-title {
   float: left;
 }
+#user-menu {
+  clear: both;
+  float: right;
+}
 .sitetitle {
   font-size: 66px;
 }

@@ -25,6 +25,8 @@ class UserFormController
      */
     public function editAction($user = null)
     {
+        // dump($_SESSION);
+        
         $this->di->session();
         
         $user = isset($user) ? $user : null;
@@ -62,5 +64,26 @@ class UserFormController
         ]);
     }
     
-    
+    /**
+     * Logout
+     *
+     */
+    public function LogoutAction()
+    {
+        $this->di->session();
+        
+        $form = new \Joah\UserForm\CLogoutForm();
+        $form->setDI($this->di);
+        
+        $form->check();
+
+        $content = $form->getHTML();
+        
+        
+        $this->di->theme->setTitle("Utloggning");
+        $this->di->views->add('users/page', [
+            'title' => "Logga ut",
+            'content' => $content
+        ]);
+    }    
 }
