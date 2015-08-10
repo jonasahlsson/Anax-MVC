@@ -361,7 +361,7 @@ class ForumController implements \Anax\DI\IInjectionAware
     {
         $this->theme->setTitle('Ställ en fråga!');
         // test
-        $this->session->set('user_id', 1);
+        // $this->session->set('user_id', 1);
         
         
         $form = $this->di->form->create([], [
@@ -435,7 +435,7 @@ class ForumController implements \Anax\DI\IInjectionAware
     
         $this->saveTags($form, $question_id);
         
-        // lägg till koll av saveTags. sätta And emellan? eller multiplicera? finns det en 0 så blir det inte 1.
+        // Add a check for saveTAgs. AND? multiplication 1*0 = 0?
         return $res;
     }
 
@@ -496,7 +496,7 @@ class ForumController implements \Anax\DI\IInjectionAware
 
         $this->theme->setTitle('Redigera fråga');
         // test
-        $this->session->set('user_id', 1);
+        // $this->session->set('user_id', 1);
 
         // fetch question
         $q = $this->question->find($id);
@@ -520,6 +520,7 @@ class ForumController implements \Anax\DI\IInjectionAware
                 'required'    => true,
                 'validation'  => ['not_empty'],
             ],
+            
             'content' => [
                 'type'        => 'textarea',
                 'value'       => $this->question->content,
@@ -527,12 +528,12 @@ class ForumController implements \Anax\DI\IInjectionAware
                 'required'    => true,
                 'validation'  => ['not_empty'],
             ],
+            
             'tags' => [
                 'type'        => 'text',
                 'value'       => $this->tag->tagsToString($id),
                 'label'       => 'Taggar (ex: #inomhus #sniglar)',
             ],
-            
             
             'spara' => [
                 'type'      => 'submit',
@@ -561,7 +562,7 @@ class ForumController implements \Anax\DI\IInjectionAware
         
         // Print form
         $this->di->views->add('forum/page', [
-        'title' => "Ställ din fråga!",
+        'title' => "Redigera din fråga",
         'content' => $form->getHTML()
         ]);
 
@@ -642,6 +643,167 @@ class ForumController implements \Anax\DI\IInjectionAware
         return ['questions' => $questions, 'answers' => $answers, 'comments' => $comments];
         
     }
+    
+    
+    /**
+     * Create an answer
+     *
+     * @return void
+     */
+    public function answerAction($question_id = null)
+    {
+        // dump($_SESSION);
+        $this->theme->setTitle('Besvara en fråga');
+
+        // fetch question
+        $q = $this->question->find($question_id);
+
+        // check if question was found
+        if (empty($q)) {
+            die("question_id ='$question_id' not found");
+        }
+        
+        
+        $form = $this->di->form->create([], [
+            'question_id' => [
+                'type' => 'hidden',
+                'value'       => $question_id,
+                'label'       => 'question_id',
+            ],
+            'content' => [    
+                'type'        => 'textarea',
+                'label'       => 'Svarstext:',
+                'required'    => true,
+                'validation'  => ['not_empty'],
+            ],
+            'spara' => [
+                'type'      => 'submit',
+                'callback'  => [$this, 'saveAnswer'],
+            ],
+
+        ]);
+        
+        // Check the status of the form
+        $status = $form->check();
+     
+        // if form was submitted
+        if ($status === true) {
+            //$form->AddOUtput("<p><i>Sparat!</i></p>");
+            $this->redirectTo("forum/view/{$this->question->id}");
+        } 
+        // If form could not be submitted.
+        else if ($status === false) {
+            // What to do when form could not be processed?
+            $form->AddOutput("<p><i>Något gick fel.</i></p>");
+            
+            $form->saveInSession = true;
+            
+            $this->redirectTo();
+        }
+        
+        // Print form
+        $this->di->views->add('forum/page', [
+        'title' => "Besvara en fråga",
+        'content' => $form->getHTML()
+        ]);
+
+    }
+    
+    
+    /**
+     *  callback used to Save answer 
+     */
+    public function saveAnswer($form)
+    {
+        // fetch user id from session
+        $user_session = $this->session->get('user');
+        $user_id = $user_session['id'];
+        
+        // save question
+        $res = $this->answer->save([
+        'id' => null ==! $form->Value('id') ? $form->Value('id') : null,
+        'question_id' => $form->Value('question_id'),
+        'content' => $form->Value('content'),
+        'user_id' => $user_id,
+        'timestamp' => date('Y-m-d H:i:s'),
+        ]);
+    
+        // fetch question_id
+        $question_id = null ==! $form->Value('id') ? $form->Value('id') : $this->db->lastInsertId();
+    
+        return $res;
+    }
+    
+    
+    /**
+     * Edit answer
+     *
+     * @return void
+     */
+    public function editAnswerAction($answer_id = null)
+    {
+
+        $this->theme->setTitle('Redigera svar');
+
+        // fetch question
+        $a = $this->answer->find($answer_id);
+
+        // check if question was found
+        if (empty($a)) {
+            die("answer_id = '$answer_id' not found");
+        }
+        
+        $form = $this->di->form->create([], [
+            'id' => [
+                'type'        => 'hidden',
+                'value'       => $answer_id,
+                'label'       => 'id',
+            ],
+            'question_id' => [
+                'type' => 'hidden',
+                'value'       => $this->answer->question_id,
+                'label'       => 'question_id',
+            ],
+            'content' => [
+                'type'        => 'textarea',
+                'value'       => $this->answer->content,
+                'label'       => 'Frågetext:',
+                'required'    => true,
+                'validation'  => ['not_empty'],
+            ],
+            'spara' => [
+                'type'      => 'submit',
+                'callback'  => [$this, 'saveAnswer'],
+            ],
+
+        ]);
+        
+        // Check the status of the form
+        $status = $form->check();
+     
+        // if form was submitted
+        if ($status === true) {
+            //$form->AddOUtput("<p><i>Sparat!</i></p>");
+            $this->redirectTo("forum/view/{$this->answer->question_id}");
+        } 
+        // If form could not be submitted.
+        else if ($status === false) {
+            // What to do when form could not be processed?
+            $form->AddOutput("<p><i>Något gick fel.</i></p>");
+            
+            $form->saveInSession = true;
+            
+            $this->redirectTo();
+        }
+        
+        // Print form
+        $this->di->views->add('forum/page', [
+        'title' => "Redigera din fråga",
+        'content' => $form->getHTML()
+        ]);
+
+    }
+
     
     public function getQuestion() {
         return $this->question;

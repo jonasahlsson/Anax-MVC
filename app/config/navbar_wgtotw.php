@@ -13,14 +13,14 @@ return [
 
         // This is a menu item
         'start'  => [
-            'text'  => 'Förstasida',
+            'text'  => '<i class="fa fa-home"></i> Förstasida',
             'url'   => $this->di->get('url')->create(''),
             'title' => 'Förstasida'
         ],
  
         // This is a menu item
         'questions'  => [
-            'text' => 'Frågor',
+            'text' => '<i class="fa fa-question-circle"></i> Frågor',
             'url'   => $this->di->get('url')->create('forum'),
             'title' => 'Frågor',
             
@@ -49,14 +49,14 @@ return [
  
         // This is a menu item
         'tags' => [
-            'text'  =>'Taggar',
+            'text'  =>'<i class="fa fa-tags"></i> Taggar',
             'url'   => $this->di->get('url')->create('forum/overview-tag'),
             'title' => 'Taggar',
         ],
 
         // This is a menu item
         'user' => [
-            'text'  =>'Användare',
+            'text'  =>'<i class="fa fa-user"></i> Användare',
             'url'   => $this->di->get('url')->create('users/list'),
             'title' => 'Användare',
             
@@ -91,7 +91,7 @@ return [
 
         // This is a menu item
         'about' => [
-            'text'  =>'Om oss',
+            'text'  =>'<i class="fa fa-info-circle"></i> Om oss',
             'url'   => $this->di->get('url')->create('about'),
             'title' => 'Om oss',
         ],

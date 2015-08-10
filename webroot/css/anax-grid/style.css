@@ -853,12 +853,30 @@ figure.rounded img {
 .wrap-question,
 .wrap-answer,
 .comments {
-  margin-bottom: 4em;
+  margin-bottom: 8em;
 }
 .comment {
   font-size: smaller;
   border-top: 1px dotted;
   border-bottom: 1px dotted;
+  color: #888;
+}
+.edit-link {
+  font-size: smaller;
+  color: #888;
+}
+#login-menu {
+  font-size: smaller;
+  color: #888;
+}
+.author {
+  background-color: #EEE;
+}
+.right {
+  float: right;
+}
+.smaller {
+  font-size: smaller;
 }
 @font-face {
   font-family: 'FontAwesome';

@@ -7,10 +7,11 @@
             
             <?php if(isset($_SESSION['user']['id'])): ?>
                 <a href='<?=$this->url->create("users/id/{$_SESSION['user']['id']}") ?>'>
+                    
+                    <?=$this->users->fetchGravatar($_SESSION['user']['id'],30) ?>
                     <?=$this->users->fetchName($_SESSION['user']['id']) ?>
-                    <?=$this->users->fetchGravatar($_SESSION['user']['id'],20) ?>
                 </a>
-                <a href='<?=$this->url->create("users/logout") ?>'>Logga ut</a>
+                | <a href='<?=$this->url->create("users/logout") ?>'>Logga ut</a>
             <?php else: ?>
                 <a href='<?=$this->url->create("users/login") ?>'>Logga in</a>
             <?php endif; ?>    

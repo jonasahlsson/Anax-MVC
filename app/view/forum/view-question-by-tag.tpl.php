@@ -4,15 +4,15 @@
     <ul>
         <?php foreach ($questions as $question) :?>
             <li>
-                <h3><?=$question->title ?> </h3>
+                <h3><a href='<?=$this->url->create("forum/view/{$question->question_id}") ?>'><?=$question->title ?> </a></h3>
                 <p>
-                    <?=$question->content ?>
+                    <a href='<?=$this->url->create("forum/view/{$question->question_id}") ?>'><?=$question->content ?></a>
                 </p>
                 
-                <p>
-                <?=$this->users->fetchName($question->user_id); ?>
-                <?=$question->timestamp ?>
-                </p>
+                <div class='author'>
+                    <a href='<?=$this->url->create("users/id/{$question->user_id}") ?>'><?=$this->users->fetchName($question->user_id); ?></a>
+                    <?=$question->timestamp ?>
+                </div>
             </li>
         <?php endforeach; ?>    
     </ul>
