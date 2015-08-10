@@ -16,7 +16,7 @@
                         <?php endforeach; ?>
                     </ul>
                 <?php endif; ?>
-                <div class="author right">
+                <div class="author right smaller">
                 <?=$this->users->fetchGravatar($question->user_id);?>
                 <a href='<?=$this->url->create("users/id/{$question->user_id}") ?>'>
                     <?=$this->users->fetchName($question->user_id); ?>
@@ -32,14 +32,16 @@
                     <!--Question Comments-->
                     <?php foreach ($questionComments as $comment) :?>
                         <div class='comment'>
-                            <p><?=$comment->content ?></p>
+                            <?=$comment->content ?>
                             - 
                             <a href='<?=$this->url->create("users/id/{$comment->user_id}") ?>'>
                                 <?=$this->users->fetchName($comment->user_id); ?>
                             </a>
                             <?=$comment->timestamp ?>
+                            <a href='<?=$this->url->create("forum/edit-comment/{$comment->id}") ?>'><span class="edit-link">Redigera</span></a>
                         </div>
-                    <?php endforeach; ?>    
+                    <?php endforeach; ?>
+                    <a href='<?=$this->url->create("forum/comment/{$question->id}") ?>'><span class="edit-link">Kommentera</span></a>
                 </div>
             <?php endif;?>
         </div>
@@ -54,7 +56,7 @@
                         <div class='answer'>
                             <p><?=$answer->content ?></p>
                             
-                            <div class="author right">
+                            <div class="author right smaller">
                                 <?=$this->users->fetchGravatar($answer->user_id) ?>
                                 <a href='<?=$this->url->create("users/id/{$answer->user_id}") ?>'>
                                     <?=$this->users->fetchName($answer->user_id); ?>
@@ -71,20 +73,23 @@
                                 
                                     <?php if ($comment->answer_id == $answer->id): ?>
                                         <div class='comment'>
-                                            <p><?=$comment->content ?></p>
+                                            <?=$comment->content ?>
                                             - 
                                             <a href='<?=$this->url->create("users/id/{$comment->user_id}") ?>'> 
                                                 <?=$this->users->fetchName($comment->user_id); ?>
                                             </a>    
                                             <?=$comment->timestamp ?>
+                                            <a href='<?=$this->url->create("forum/edit-comment/{$comment->id}") ?>'><span class="edit-link">Redigera</span></a>
                                         </div>    
                                     <?php endif; ?>
                                 <?php endforeach; ?>  
+                            <a href='<?=$this->url->create("forum/comment/{$answer->question_id}/{$answer->id}") ?>'><span class="edit-link">Kommentera</span></a>
                             </div>
                         <?php endif; ?>
                     </div>    
                 <?php endforeach; ?>    
             </div>
+            <a href='<?=$this->url->create("forum/answer/{$question->id}") ?>'>BESVARA FRÅGAN</a>
         <?php endif;?>
     </div>    
 <?php endif;?>

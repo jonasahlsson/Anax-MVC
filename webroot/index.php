@@ -107,7 +107,7 @@ $app->router->add('about', function() use ($app) {
     
     $app->views->add('forum/content', [
         'content' => $content,
-    ], 'sidebar');
+    ], 'main');
     
 });
 

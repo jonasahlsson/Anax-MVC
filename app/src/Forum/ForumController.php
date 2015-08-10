@@ -728,9 +728,6 @@ class ForumController implements \Anax\DI\IInjectionAware
         'timestamp' => date('Y-m-d H:i:s'),
         ]);
     
-        // fetch question_id
-        $question_id = null ==! $form->Value('id') ? $form->Value('id') : $this->db->lastInsertId();
-    
         return $res;
     }
     
@@ -748,7 +745,7 @@ class ForumController implements \Anax\DI\IInjectionAware
         // fetch question
         $a = $this->answer->find($answer_id);
 
-        // check if question was found
+        // check if answer was found
         if (empty($a)) {
             die("answer_id = '$answer_id' not found");
         }
@@ -767,7 +764,7 @@ class ForumController implements \Anax\DI\IInjectionAware
             'content' => [
                 'type'        => 'textarea',
                 'value'       => $this->answer->content,
-                'label'       => 'Frågetext:',
+                'label'       => 'Svarstext:',
                 'required'    => true,
                 'validation'  => ['not_empty'],
             ],
@@ -798,12 +795,189 @@ class ForumController implements \Anax\DI\IInjectionAware
         
         // Print form
         $this->di->views->add('forum/page', [
-        'title' => "Redigera din fråga",
+        'title' => "Redigera ditt svar",
         'content' => $form->getHTML()
         ]);
 
     }
 
+    
+    /**
+     * Create a comment
+     *
+     * @return void
+     */
+    public function commentAction($question_id = null, $answer_id = null)
+    {
+        // dump($_SESSION);
+        $this->theme->setTitle('Kommentera');
+
+        // fetch question
+        $q = $this->question->find($question_id);
+        // fetch answer
+        $a = $this->answer->find($answer_id);
+
+        // check if question was found
+        if (empty($q)) {
+            die("question_id ='$question_id' not found");
+        }
+        // check if answer_id matches question_id
+        if (!empty($a) AND $question_id !== $a->question_id) {
+            die("question_id and answer_id doesn't match");
+        }
+        
+        
+        
+        $form = $this->di->form->create([], [
+            'question_id' => [
+                'type' => 'hidden',
+                'value'       => $question_id,
+                'label'       => 'question_id',
+            ],
+            'answer_id' => [
+                'type' => 'hidden',
+                'value'       => $answer_id,
+                'label'       => 'answer_id',
+            ],
+            'content' => [    
+                'type'        => 'textarea',
+                'label'       => 'Kommentarstext:',
+                'required'    => true,
+                'validation'  => ['not_empty'],
+            ],
+            'spara' => [
+                'type'      => 'submit',
+                'callback'  => [$this, 'saveComment'],
+            ],
+
+        ]);
+        
+        // Check the status of the form
+        $status = $form->check();
+     
+        // if form was submitted
+        if ($status === true) {
+            //$form->AddOUtput("<p><i>Sparat!</i></p>");
+            $this->redirectTo("forum/view/{$this->question->id}");
+        } 
+        // If form could not be submitted.
+        else if ($status === false) {
+            // What to do when form could not be processed?
+            $form->AddOutput("<p><i>Något gick fel.</i></p>");
+            
+            $form->saveInSession = true;
+            
+            $this->redirectTo();
+        }
+        
+        // Print form
+        $this->di->views->add('forum/page', [
+        'title' => "Kommentera",
+        'content' => $form->getHTML()
+        ]);
+
+    }
+    
+    
+    /**
+     *  callback used to Save comment 
+     */
+    public function saveComment($form)
+    {
+        // fetch user id from session
+        $user_session = $this->session->get('user');
+        $user_id = $user_session['id'];
+        
+        // keep numeric ids and turn empty ids into null
+        $answer_id = is_numeric($form->Value('answer_id')) ? $form->Value('answer_id') : null;
+        
+        // save comment
+        $res = $this->comment->save([
+        'id' => null ==! $form->Value('id') ? $form->Value('id') : null,
+        'question_id' => $form->Value('question_id'),
+        'answer_id' => $answer_id,
+        'content' => $form->Value('content'),
+        'user_id' => $user_id,
+        'timestamp' => date('Y-m-d H:i:s'),
+        ]);
+    
+        return $res;
+    }
+    
+    
+    /**
+     * Edit comment
+     *
+     * @return void
+     */
+    public function editCommentAction($comment_id = null)
+    {
+
+        $this->theme->setTitle('Redigera svar');
+
+        // fetch comment
+        $c = $this->comment->find($comment_id);
+
+        // check if question was found
+        if (empty($c)) {
+            die("comment_id = '$comment_id' not found");
+        }
+        
+        $form = $this->di->form->create([], [
+            'id' => [
+                'type'        => 'hidden',
+                'value'       => $comment_id,
+                'label'       => 'id',
+            ],
+            'question_id' => [
+                'type'        => 'hidden',
+                'value'       => $this->comment->question_id,
+                'label'       => 'question_id',
+            ],
+            'answer_id' => [
+                'type'        => 'hidden',
+                'value'       => $this->comment->answer_id,
+                'label'       => 'answer_id',
+            ],
+            'content' => [
+                'type'        => 'textarea',
+                'value'       => $this->comment->content,
+                'label'       => 'Kommentarstext:',
+                'required'    => true,
+                'validation'  => ['not_empty'],
+            ],
+            'spara' => [
+                'type'      => 'submit',
+                'callback'  => [$this, 'saveComment'],
+            ],
+
+        ]);
+        
+        // Check the status of the form
+        $status = $form->check();
+     
+        // if form was submitted
+        if ($status === true) {
+            //$form->AddOUtput("<p><i>Sparat!</i></p>");
+            $this->redirectTo("forum/view/{$this->comment->question_id}");
+        } 
+        // If form could not be submitted.
+        else if ($status === false) {
+            // What to do when form could not be processed?
+            $form->AddOutput("<p><i>Något gick fel.</i></p>");
+            
+            $form->saveInSession = true;
+            
+            $this->redirectTo();
+        }
+        
+        // Print form
+        $this->di->views->add('forum/page', [
+        'title' => "Redigera din kommentar",
+        'content' => $form->getHTML()
+        ]);
+
+    }
     
     public function getQuestion() {
         return $this->question;
