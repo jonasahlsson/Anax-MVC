@@ -56,11 +56,12 @@ class UserFormController
         $form->setDI($this->di);
         
         $form->check();
-
+        
         $this->di->theme->setTitle("Inloggning");
         $this->di->views->add('users/page', [
             'title' => "Inloggning",
-            'content' => $form->getHTML()
+            'content' => $form->getHTML(),
+            'links' => [['href' => 'users/create', 'text' => 'Skapa ny användare' ]]
         ]);
     }
     

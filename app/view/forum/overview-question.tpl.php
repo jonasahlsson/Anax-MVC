@@ -18,4 +18,5 @@
             <hr>
         <?php endforeach; ?>        
     </ul>
+    <a href='<?=$this->url->create("forum/new-question") ?>'>STÄLL DIN FRÅGA!</a>
 <?php endif;?>    

@@ -9,7 +9,7 @@
         <br>
         Namn: <?=$user->name ?>
         <br>
-        <a href='<?=$this->url->create("users/edit/{$user->id}")?>'>Redigera</a>
+        <a href='<?=$this->url->create("users/edit/{$user->id}")?>'><span class='edit-link'>Redigera</span></a>
     </div>
     <hr>
     <div class='user-contributions'>

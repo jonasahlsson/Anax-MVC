@@ -123,9 +123,10 @@ class ForumController implements \Anax\DI\IInjectionAware
     public function testAction($id = null) 
     {
         // test route
-        echo "hej från test<br>";
+        echo "Nedan följer en dump av session['user']<br>";
         
         dump($this->session->get('user'));
+        // dump($this->di);
         
     }
     
@@ -359,10 +360,13 @@ class ForumController implements \Anax\DI\IInjectionAware
      */
     public function newQuestionAction()
     {
+        // check if logged in.
+        if($this->users->isLoggedIn()) {
+            die("Funktionen kräver inloggning - <a href='{$this->url->create('users/login')}'>Logga in</a>");
+        }
+    
         $this->theme->setTitle('Ställ en fråga!');
-        // test
-        // $this->session->set('user_id', 1);
-        
+
         
         $form = $this->di->form->create([], [
             'title' => [
@@ -421,12 +425,17 @@ class ForumController implements \Anax\DI\IInjectionAware
      */
     public function saveQuestion($form)
     {
+        
+        // fetch user id from session
+        $user_session = $this->session->get('user');
+        $user_id = $user_session['id'];
+        
         // save question
         $res = $this->question->save([
         'id' => null ==! $form->Value('id') ? $form->Value('id') : null,
         'title' => $form->Value('title'),
         'content' => $form->Value('content'),
-        'user_id' => $this->session->get('user_id'),
+        'user_id' => $user_id,
         'timestamp' => date('Y-m-d H:i:s'),
         ]);
     
