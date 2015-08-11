@@ -197,11 +197,8 @@ class UsersController extends \Anax\Users\UsersController implements \Anax\DI\II
      
         $user = $this->users->find($id);
         
+        // fetch and extract questions, answers and comments to variables
         extract($this->di->ForumController->fetchUserContribution($id));
-        
-        // dump($questions);
-        // dump($answers);
-        // dump($comments);
         
         $this->theme->setTitle("Visa användare");
         $this->views->add('forum/view-user', [
@@ -455,12 +452,12 @@ class UsersController extends \Anax\Users\UsersController implements \Anax\DI\II
      *
      * @return void
      */
-    public function loginAction()
+    public function loginAction($url = null)
     {
         // display userform
         $controller = new \Joah\UserForm\UserFormController();
         $controller->setDI($this->di);
-        $controller->loginAction();
+        $controller->loginAction($url);
         
     }
 

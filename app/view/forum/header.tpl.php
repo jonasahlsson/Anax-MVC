@@ -13,7 +13,7 @@
                 </a>
                 | <a href='<?=$this->url->create("users/logout") ?>'>Logga ut</a>
             <?php else: ?>
-                <a href='<?=$this->url->create("users/login") ?>'>Logga in</a>
+                <a href='<?=$this->url->create("users/login") ?>?url=<?=$this->request->getRoute() ?>'>Logga in</a>
             <?php endif; ?>    
                 
         </nav>

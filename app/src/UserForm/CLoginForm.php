@@ -12,19 +12,25 @@ class CLoginForm extends \Mos\HTMLForm\CForm
         \Anax\MVC\TRedirectHelpers;
     
     // private $user;
+    // private $redirectURL; // redirect url
     
     /**
      * Constructor
      *
      */
-    public function __construct($user = null)
+    // public function __construct($user = null)
+    public function __construct($redirectURL = null)
     {
-        $acronym = isset($user->acronym) ? htmlentities($user->acronym) : null;
+        // $acronym = isset($user->acronym) ? htmlentities($user->acronym) : null;
+        
+        // set redirect url
+        // $this->redirectURL = isset($redirectURL) ? $redirectURL : 'users/login';
+        
         parent::__construct([], [
             'acronym' => [
                 'type'        => 'text',
                 'label'       => 'Användarnamn:',
-                'value'       => $acronym,
+                // 'value'       => $acronym,
                 'required'    => true,
                 'validation'  => ['not_empty'],
             ],
@@ -114,7 +120,10 @@ class CLoginForm extends \Mos\HTMLForm\CForm
     {
         //$this->AddOUtput("<p><i>Användaruppgifter sparade</i></p>");
         $this->AddOUtput("Inloggad.");
-        $this->redirectTo('users/login');
+        // $this->redirectTo('users/login');
+        // default redirect back to users/login, use query tag ?url=link to go elsewhere, ex ?url=forum/view/1. tip use $this->di->request->currentUrl or similar to build a returning redirect
+        /* <a href='<?=$this->url->create("users/login") ?>?url=<?=$this->request->getRoute() ?>'>Logga in</a> */
+        $this->redirectTo($this->di->request->getGet('url', 'users/login'));
     }
 
 

@@ -34,9 +34,8 @@ class ForumController implements \Anax\DI\IInjectionAware
         $this->tag = new \Joah\Forum\Tag();
         $this->tag->setDI($this->di);
 
-        
-        // activate session
-        $this->di->session(); // Will load the session service which also starts the session
+        // // activate session
+        // $this->di->session(); // Will load the session service which also starts the session
 
         // load CForm 
         $this->di->set('form', '\Mos\HTMLForm\CForm');
@@ -123,9 +122,11 @@ class ForumController implements \Anax\DI\IInjectionAware
     public function testAction($id = null) 
     {
         // test route
-        echo "Nedan följer en dump av session['user']<br>";
+        // echo "Nedan följer en dump av session['user']<br>";
+        echo "Nedan följer en dump av session<br>";
         
-        dump($this->session->get('user'));
+        // dump($this->session->get('user'));
+        dump($_SESSION);
         // dump($this->di);
         
     }
@@ -362,7 +363,9 @@ class ForumController implements \Anax\DI\IInjectionAware
     {
         // check if logged in.
         if($this->users->isLoggedIn()) {
-            die("Funktionen kräver inloggning - <a href='{$this->url->create('users/login')}'>Logga in</a>");
+        // redirect to login page and return after successfull login
+            $this->redirectTo($this->url->create("users/login") . "?url=" . $this->request->getRoute());
+            die("Funktionen kräver inloggning");
         }
     
         $this->theme->setTitle('Ställ en fråga!');
@@ -503,6 +506,14 @@ class ForumController implements \Anax\DI\IInjectionAware
     public function editQuestionAction($id = null)
     {
 
+        // check if logged in.
+        if($this->users->isLoggedIn()) {
+        // redirect to login page and return after successfull login
+            $this->redirectTo($this->url->create("users/login") . "?url=" . $this->request->getRoute());
+            
+        }
+        
+    
         $this->theme->setTitle('Redigera fråga');
         // test
         // $this->session->set('user_id', 1);
@@ -514,6 +525,12 @@ class ForumController implements \Anax\DI\IInjectionAware
         if (empty($q)) {
             die("question_id = '$id' not found");
         }
+        
+        // check editing rights
+        if(!($this->users->verifyLoggedInAs($this->question->user_id))) {
+            die("Du saknar rättigheter för den här åtgärden.");
+        }
+        
         
         $form = $this->di->form->create([], [
             'id' => [
@@ -649,6 +666,15 @@ class ForumController implements \Anax\DI\IInjectionAware
         $answers = $this->answer->findAnswerByUser($user_id);
         $comments = $this->comment->findCommentByUser($user_id);
         
+        // makdown filter
+        foreach($answers as $answer) {
+            $answer->content = $this->textFilter->doFilter($answer->content, 'markdown');
+        }
+        foreach($comments as $comment) {
+            $comment->content = $this->textFilter->doFilter($comment->content, 'markdown');
+        }
+        
+        
         return ['questions' => $questions, 'answers' => $answers, 'comments' => $comments];
         
     }
@@ -661,7 +687,14 @@ class ForumController implements \Anax\DI\IInjectionAware
      */
     public function answerAction($question_id = null)
     {
-        // dump($_SESSION);
+        
+        // check if logged in.
+        if($this->users->isLoggedIn()) {
+            // redirect to login page and return after successfull login
+            $this->redirectTo($this->url->create("users/login") . "?url=" . $this->request->getRoute());
+            die("Funktionen kräver inloggning");
+        }
+        
         $this->theme->setTitle('Besvara en fråga');
 
         // fetch question
@@ -758,6 +791,12 @@ class ForumController implements \Anax\DI\IInjectionAware
         if (empty($a)) {
             die("answer_id = '$answer_id' not found");
         }
+
+        // check editing rights
+        if(!($this->users->verifyLoggedInAs($this->answer->user_id))) {
+            die("Du saknar rättigheter för den här åtgärden.");
+        }      
+        
         
         $form = $this->di->form->create([], [
             'id' => [
@@ -818,7 +857,13 @@ class ForumController implements \Anax\DI\IInjectionAware
      */
     public function commentAction($question_id = null, $answer_id = null)
     {
-        // dump($_SESSION);
+        // check if logged in.
+        if($this->users->isLoggedIn()) {
+            // redirect to login page and return after successfull login
+            $this->redirectTo($this->url->create("users/login") . "?url=" . $this->request->getRoute());
+            die("Funktionen kräver inloggning");
+        }
+    
         $this->theme->setTitle('Kommentera');
 
         // fetch question
@@ -921,7 +966,7 @@ class ForumController implements \Anax\DI\IInjectionAware
      */
     public function editCommentAction($comment_id = null)
     {
-
+   
         $this->theme->setTitle('Redigera svar');
 
         // fetch comment
@@ -931,6 +976,12 @@ class ForumController implements \Anax\DI\IInjectionAware
         if (empty($c)) {
             die("comment_id = '$comment_id' not found");
         }
+        
+        // check editing rights
+        if(!($this->users->verifyLoggedInAs($this->comment->user_id))) {
+            die("Du saknar rättigheter för den här åtgärden.");
+        }
+        
         
         $form = $this->di->form->create([], [
             'id' => [
@@ -988,14 +1039,14 @@ class ForumController implements \Anax\DI\IInjectionAware
 
     }
     
-    public function getQuestion() {
-        return $this->question;
-    }
+    // public function getQuestion() {
+        // return $this->question;
+    // }
     
     
-    public function test($var)
-    {       
-        $this->initialize();
-        return $var;
-    }
+    // public function test($var)
+    // {       
+        // $this->initialize();
+        // return $var;
+    // }
 }

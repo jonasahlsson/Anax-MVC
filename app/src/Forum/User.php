@@ -65,19 +65,10 @@ class User extends \Anax\Users\User
     
     public function logout() 
     {
-        //unset session variable and return true 
-        // if(isset($_SESSION['user'])) {
-        if($this->session->has(self::SESSION_VARIABLE)) {
-            $this->session->set(self::SESSION_VARIABLE, []);
-            // unset($_SESSION['user']);
-            return true;
-        }
-        //if session variable missing noone was logged in. return false
-            else {
-            return false;
-            }
-    }
-    
+        $_SESSION = [];
+        return true;
+    }        
+
     
     /**
      *  Fetch user by acronym
@@ -91,6 +82,7 @@ class User extends \Anax\Users\User
         $this->db->execute([$acronym]);
         return $this->db->fetchInto($this);
     }
+    
     
     /**
     *  Verify password.
@@ -114,6 +106,7 @@ class User extends \Anax\Users\User
         }        
     }    
     
+    
     /**
      *  Verify that user is logged in.
      */
@@ -128,13 +121,13 @@ class User extends \Anax\Users\User
         }
     }
     
-    /**
-     *  Verify that user is logged as an id
-     */
     
-    public function verifyLoggedInAs($user_id)
+    /**
+     *  Verify that user is logged in as an specific id
+     */
+    public function verifyLoggedInAs($user_id = null)
     {
-         if (isset($_SESSION['user']['id']) AND $_SESSION['user']['id'] === $user_id) {
+        if (isset($_SESSION['user']['id']) AND ($_SESSION['user']['id'] === $user_id)) {
             return true;
         }
         else {

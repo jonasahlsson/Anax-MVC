@@ -48,7 +48,7 @@ class UserFormController
      * Login
      *
      */
-    public function LoginAction()
+    public function LoginAction($url = null)
     {
         $this->di->session();
         
