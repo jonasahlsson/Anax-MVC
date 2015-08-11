@@ -1039,6 +1039,98 @@ class ForumController implements \Anax\DI\IInjectionAware
 
     }
     
+    
+    /**
+     *  Display overview of latest questions
+     *  
+     *  @return void
+     */
+    public function latestQuestionsAction()
+    {
+        // fetch latest questions
+        $all = $this->question->latestQuestions(5);
+
+        // markdown filter
+        foreach($all as $question) {
+            $question->content = $this->textFilter->doFilter($question->content, 'markdown');
+        }
+    
+        // add view
+        $this->views->add('forum/latest-questions', [
+            'title' => "Senaste frågorna",
+            'questions' => $all,
+        ]);
+    
+    }
+    
+    
+    /**
+     *  Display popular tags
+     *  
+     *  @return void
+     */
+    public function popularTagAction()
+    {
+        // fetch counted tags
+        $tags = $this->tag->countTags();
+            
+        $this->views->add('forum/popular-tag', [
+            'title' => "Populära taggar",
+            'tags' => $tags,
+        ]);
+    }
+        
+    
+    /**
+     * List active users.
+     *
+     * @return void
+     */
+
+     public function activeUsersAction()
+    {
+        // $this->initialize();
+     
+        // $all = $this->users->findAll();
+        
+        // get top three askers
+        $askers = $this->question->activeAskers(3);
+        dump($askers);
+     
+        $this->views->add('forum/active-users', [
+            'users' => $all,
+            'title' => "Aktiva användare",
+        ]);
+    }
+    
+    
+    // /**
+     // *  Fetch user contributions. Questions, Answers, and comments
+     // */
+    // public function fetchUserContribution($user_id)
+    // {
+        // // creates objects
+        // $this->initialize();
+        
+        // $questions = $this->question->findQuestionByUser($user_id);
+        // $answers = $this->answer->findAnswerByUser($user_id);
+        // $comments = $this->comment->findCommentByUser($user_id);
+        
+        // // makdown filter
+        // foreach($answers as $answer) {
+            // $answer->content = $this->textFilter->doFilter($answer->content, 'markdown');
+        // }
+        // foreach($comments as $comment) {
+            // $comment->content = $this->textFilter->doFilter($comment->content, 'markdown');
+        // }
+        
+        
+        // return ['questions' => $questions, 'answers' => $answers, 'comments' => $comments];
+        
+    // }
+    
+    
+    
     // public function getQuestion() {
         // return $this->question;
     // }

@@ -474,5 +474,5 @@ class UsersController extends \Anax\Users\UsersController implements \Anax\DI\II
         $controller->logoutAction();
         
     }
-  
+    
 }

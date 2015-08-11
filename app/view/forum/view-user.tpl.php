@@ -1,4 +1,4 @@
-<h1><?=$title?></h1>
+<h2><?=$title?></h2>
  
 <?php if (isset($user)) :?>
     <div class='user-gravatar'>
@@ -60,7 +60,8 @@
                     </a>    
                     <?php endforeach; ?>
                 </ul>
-        </div>        
+        </div>       
+        <hr>
         <?php endif; ?>
             
     
@@ -69,5 +70,4 @@
     
 <?php endif;?> 
 
- 
-<p><a href='<?=$this->url->create('users')?>'>Visa alla användare</a></p>
+<p><a href='<?=$this->url->create('users')?>'>VISA ALLA ANVÄNDARE</a></p> 

@@ -1,4 +1,4 @@
-<h2><?=$title ?> </h2>
+<h1><?=$title ?> </h1>
 
 <?php if (is_array($questions)) :?>
     <ul>

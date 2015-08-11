@@ -57,12 +57,21 @@ class UserFormController
         
         $form->check();
         
+
+        
+        
         $this->di->theme->setTitle("Inloggning");
         $this->di->views->add('users/page', [
             'title' => "Inloggning",
-            'content' => $form->getHTML(),
-            'links' => [['href' => 'users/create', 'text' => 'Skapa ny användare' ]]
+            'content' => $form->getHTML()
+            // 'links' => [['href' => 'users/create', 'text' => 'Skapa ny användare' ]]
         ]);
+        
+        $this->di->views->addString("<p><a href='{$this->di->url->create("users/create")}'>SKAPA NY ANVÄNDARE</a></p>");
+        
+        $testInfo = "<p>Det finns två testanvändare. admin/admin samt doe/doe.</p>";
+        
+        $this->di->views->addString($testInfo);
     }
     
     /**

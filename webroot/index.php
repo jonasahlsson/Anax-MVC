@@ -72,12 +72,31 @@ $app->router->add('', function() use ($app) {
     $app->theme->setTitle("Hem och trädgård");
 
     // main
-    $content = $app->fileContent->get('forum/content.md');
+    $content = $app->fileContent->get('forum/frontpage.md');
     $content = $app->textFilter->doFilter($content, 'shortcode, markdown');
     
     $app->views->add('forum/content', [
         'content' => $content,
     ]);
+    
+    
+    // byt till front page questions
+    $app->dispatcher->forward([
+    'controller' => 'forum',
+    'action'     => 'latest-questions',
+    ]);
+    
+    // byt till frontpage-tag
+    $app->dispatcher->forward([
+    'controller' => 'forum',
+    'action'     => 'popular-tag',    
+    ]);    
+
+    // byt till frontpage-users
+    $app->dispatcher->forward([
+    'controller' => 'users',
+    'action'     => 'active-users',    
+    ]);  
     
     // // sidebar
     // $content = $app->fileContent->get('forum/sidebar.md');

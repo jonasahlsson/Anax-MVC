@@ -559,7 +559,7 @@ body {
   color: #333;
   font-family: arial, sans-serif;
   overflow-y: scroll;
-  background: #DADF2A;
+  background: #03C03C;
   padding-top: 10px;
   padding-bottom: 10px;
 }
@@ -764,8 +764,8 @@ body.cotton-candy {
 }
 .navbar li.selected-parent,
 .navbar li.selected {
-  color: #DADF2A;
-  border-color: #DADF2A;
+  color: #03C03C;
+  border-color: #03C03C;
 }
 .navbar ul ul {
   background-color: #fff;
