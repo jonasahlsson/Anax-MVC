@@ -38,4 +38,26 @@ class Answer extends \Anax\MVC\CDatabaseModel
         $this->db->setFetchModeClass(__CLASS__);
         return $this->db->fetchAll();
     }
+    
+    /**
+     * Find users with most answers
+     *
+     * @return array
+     */
+    public function activeUsers($num = null)
+    {
+        // $this->db->setVerbose();
+        
+        $sql = "SELECT user_id, count(user_id) AS count_user_id
+                FROM {$this->getSource()}
+                GROUP BY user_id
+                ORDER BY count_user_id DESC
+                LIMIT $num;";
+        
+        $params = [];
+        
+        return $this->db->executeFetchAll($sql, $params);
+    }
+    
+    
 }

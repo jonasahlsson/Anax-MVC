@@ -71,7 +71,8 @@ $di->set('UsersController', function() use ($di) {
 $app->router->add('', function() use ($app) {
     $app->theme->setTitle("Hem och trädgård");
 
-    // main
+    // main 
+    //welcome text
     $content = $app->fileContent->get('forum/frontpage.md');
     $content = $app->textFilter->doFilter($content, 'shortcode, markdown');
     
@@ -80,22 +81,23 @@ $app->router->add('', function() use ($app) {
     ]);
     
     
-    // byt till front page questions
+    // latest questions
     $app->dispatcher->forward([
     'controller' => 'forum',
     'action'     => 'latest-questions',
     ]);
     
-    // byt till frontpage-tag
+    // popular tags
     $app->dispatcher->forward([
     'controller' => 'forum',
     'action'     => 'popular-tag',    
     ]);    
 
-    // byt till frontpage-users
+    // active top users
     $app->dispatcher->forward([
-    'controller' => 'users',
+    'controller' => 'forum',
     'action'     => 'active-users',    
+    'params'     => [4],
     ]);  
     
     // // sidebar

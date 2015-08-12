@@ -845,6 +845,11 @@ figure.rounded img {
   -moz-border-radius: 50px;
   border-radius: 50px;
 }
+li.top-users {
+  display: inline-block;
+  vertical-align: top;
+  margin-right: 3em;
+}
 .question,
 .answer {
   border-bottom: 1px dotted;
@@ -874,6 +879,9 @@ figure.rounded img {
 }
 .right {
   float: right;
+}
+.left {
+  float: left;
 }
 .smaller {
   font-size: smaller;

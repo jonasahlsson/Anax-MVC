@@ -387,6 +387,7 @@ class ForumController implements \Anax\DI\IInjectionAware
             'tags' => [
                 'type'        => 'text',
                 'label'       => 'Taggar (ex: #inomhus #sniglar)',
+                'validation'  => array('not_empty', 'custom_test' => array('message' => 'Please only use #, letters, numbers and -.', 'test' => 'return ctype_alnum(str_replace(array(" ","-","_","#"), "", $value));')),
             ],
 
             'spara' => [
@@ -1086,59 +1087,24 @@ class ForumController implements \Anax\DI\IInjectionAware
      *
      * @return void
      */
-
-     public function activeUsersAction()
+     public function activeUsersAction($num = 3)
     {
-        // $this->initialize();
+        $this->initialize();
      
-        // $all = $this->users->findAll();
+        $all = $this->users->findAll();
         
         // get top three askers
-        $askers = $this->question->activeAskers(3);
-        dump($askers);
-     
+        $askers = $this->question->activeUsers($num);
+        $answerers = $this->answer->activeUsers($num);
+        $commentators = $this->comment->activeUsers($num);
+
+        // send to view
         $this->views->add('forum/active-users', [
-            'users' => $all,
+            'askers' => $askers,
+            'answerers' => $answerers,
+            'commentators' => $commentators,
             'title' => "Aktiva användare",
         ]);
     }
-    
-    
-    // /**
-     // *  Fetch user contributions. Questions, Answers, and comments
-     // */
-    // public function fetchUserContribution($user_id)
-    // {
-        // // creates objects
-        // $this->initialize();
-        
-        // $questions = $this->question->findQuestionByUser($user_id);
-        // $answers = $this->answer->findAnswerByUser($user_id);
-        // $comments = $this->comment->findCommentByUser($user_id);
-        
-        // // makdown filter
-        // foreach($answers as $answer) {
-            // $answer->content = $this->textFilter->doFilter($answer->content, 'markdown');
-        // }
-        // foreach($comments as $comment) {
-            // $comment->content = $this->textFilter->doFilter($comment->content, 'markdown');
-        // }
-        
-        
-        // return ['questions' => $questions, 'answers' => $answers, 'comments' => $comments];
-        
-    // }
-    
-    
-    
-    // public function getQuestion() {
-        // return $this->question;
-    // }
-    
-    
-    // public function test($var)
-    // {       
-        // $this->initialize();
-        // return $var;
-    // }
+ 
 }

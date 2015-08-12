@@ -43,10 +43,10 @@ class Question extends \Anax\MVC\CDatabaseModel
     
     
     /**
-     * Find active askers
+     * Find users with most questions asked
      *
      */
-    public function activeAskers($num = null)
+    public function activeUsers($num = null)
     {
         // $this->db->setVerbose();
         
@@ -59,16 +59,6 @@ class Question extends \Anax\MVC\CDatabaseModel
         $params = [];
         
         return $this->db->executeFetchAll($sql, $params);
-        
-// SELECT user_id, count(user_id) AS count_user_id
-                // FROM question
-                // GROUP BY user_id
-                // LIMIT 3;
-                
-        // $this->db->execute($params);
-        // $this->db->setFetchModeClass(__CLASS__);
-        // return $this->db->fetchAll();
     }
-    
     
 }

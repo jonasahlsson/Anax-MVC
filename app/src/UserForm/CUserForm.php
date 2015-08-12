@@ -46,11 +46,6 @@ class CUserForm extends \Mos\HTMLForm\CForm
                 'required'    => true,
                 // allow only letters, numbers, ' ', '-' and '_'
                 'validation' => array('not_empty', 'custom_test' => array('message' => 'Please use only letters and numbers.', 'test' => 'return ctype_alnum(str_replace(array(" ","-","_"), "", $value));')),
-                // 'validation'  => ['not_empty'] 
-                // 'validation'  => ['not_empty', 'alphaNumeric'],
-                // 'validation' => array('not_empty', 'custom_test' => array('message' => 'Please use only letters and numbers.', 'test' => 'testForAlphaNumeric')),
-                // 'validation' => array('not_empty', 'custom_test' => array('message' => 'Please use only letters and numbers.', 'test' => 'return ctype_alnum($value);')),
-                
             ],
             'name' => [
                 'type'        => 'text',
