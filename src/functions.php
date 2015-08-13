@@ -61,3 +61,15 @@ function mergesort(&$array, $cmp_function)
     while ($ptr2 < count($array2)) $array[] = $array2[$ptr2++];
     return;
 }
+
+
+/**
+ * Use htmlentities with some settings
+ *
+ */
+    
+function htmlent($string)
+{
+return htmlentities($string, ENT_QUOTES, 'UTF-8');
+}
+

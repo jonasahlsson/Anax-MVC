@@ -4,18 +4,17 @@
     <ul>
         <?php foreach ($questions as $question) :?>
             <li class='question-thumb'>
-                <h3><a href='<?=$this->url->create("forum/view/{$question->id}") ?>'>  <?=$question->title ?></a></h3>
-                <a href='<?=$this->url->create("forum/view/{$question->id}") ?>'>    
-                    <?=$question->content ?>
-                </a>    
-                <br>
-                <?=$this->users->fetchGravatar($question->user_id);?>
-                <a href='<?=$this->url->create("users/id/{$question->user_id}") ?>'>
-                    <?=$this->users->fetchName($question->user_id); ?>
-                </a>    
-                <?=$question->timestamp ?>
+                <a href='<?=$this->url->create("forum/view/{$question->id}") ?>'><?=$question->title ?></a>
+                <div class="author smaller">
+                    <?=$this->users->fetchGravatar($question->user_id);?>
+                    <a href='<?=$this->url->create("users/id/{$question->user_id}") ?>'>
+                        <?=$this->users->fetchName($question->user_id); ?>
+                    </a>    
+                    <?=$question->timestamp ?>
+                    <br>
+                </div>
             </li>
-            <hr>
+            
         <?php endforeach; ?>        
     </ul>
     <a href='<?=$this->url->create("forum/new-question") ?>'>STÄLL DIN FRÅGA!</a>

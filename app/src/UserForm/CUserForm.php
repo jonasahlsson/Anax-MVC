@@ -30,6 +30,7 @@ class CUserForm extends \Mos\HTMLForm\CForm
         $name = isset($user->name) ? htmlentities($user->name) : null;
         $password = isset($user->password) ? htmlentities($user->password) : null;
         $email = isset($user->email) ? htmlentities($user->email) : null;
+        $profile = isset($user->profile) ? $user->profile : null;
         $id = isset($user->id) ? htmlentities($user->id) : null;
         $created = isset($user->created) ? htmlentities($user->created) : null;
 
@@ -55,6 +56,11 @@ class CUserForm extends \Mos\HTMLForm\CForm
                 // 'validation'  => ['not_empty'] 
                 // allow only letters, numbers, ' ', '-' and '_'
                 'validation' => array('not_empty', 'custom_test' => array('message' => 'Please use only letters and numbers.', 'test' => 'return ctype_alnum(str_replace(array(" ","-","_"), "", $value));')),
+            ],
+            'profile' => [
+                'type'        => 'text',
+                'label'       => 'Presentation:',
+                'value'       => $profile,
             ],
             'password' => [
                 'type'        => 'password',
@@ -122,6 +128,7 @@ class CUserForm extends \Mos\HTMLForm\CForm
                 $this->Value('name'),
                 $this->Value('password'),
                 $this->Value('email'),
+                $this->Value('profile'),
                 $created
             );
     

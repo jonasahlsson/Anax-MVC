@@ -127,6 +127,7 @@ class UsersController extends \Anax\Users\UsersController implements \Anax\DI\II
                 'email' => ['varchar(80)'],
                 'name' => ['varchar(80)'],
                 'password' => ['varchar(255)'],
+                'profile' => ['text'],
                 'created' => ['datetime'],
                 'updated' => ['datetime'],
                 'deleted' => ['datetime'],
@@ -136,25 +137,27 @@ class UsersController extends \Anax\Users\UsersController implements \Anax\DI\II
         
         $this->db->insert(
             'user',
-            ['acronym', 'email', 'name', 'password', 'created', 'active']
+            ['acronym', 'email', 'name', 'password', 'profile', 'created', 'active']
         );
      
         $now = gmdate('Y-m-d H:i:s');
      
         $this->db->execute([
             'admin',
-            'admin@dbwebb.se',
+            'test1@example.com',
             'Administrator',
             password_hash('admin', PASSWORD_DEFAULT),
+            'Jag är admin och jag gillar att administrera!',
             $now,
             $now
         ]);
      
         $this->db->execute([
             'doe',
-            'doe@dbwebb.se',
+            'test2@example.com',
             'John/Jane Doe',
             password_hash('doe', PASSWORD_DEFAULT),
+            'Jag är John/Jane Doe och jag är en användare!',
             $now,
             $now
         ]);
@@ -200,10 +203,14 @@ class UsersController extends \Anax\Users\UsersController implements \Anax\DI\II
         // fetch and extract questions, answers and comments to variables
         extract($this->di->ForumController->fetchUserContribution($id));
         
+        // markdown filter 
+        $user->profile = $this->textFilter->doFilter($user->profile, 'markdown');
+        
         $this->theme->setTitle("Visa användare");
         $this->views->add('forum/view-user', [
             'user' => $user,
             'title' => "Användare: " . $user->name,
+            'profile' => $user->profile,
             'questions' => $questions,
             'answers' => $answers,
             'comments' => $comments
@@ -254,7 +261,7 @@ class UsersController extends \Anax\Users\UsersController implements \Anax\DI\II
      *
      * @return void
      */
-    public function saveUser($acronym, $name, $password, $email, $created = null) 
+    public function saveUser($acronym, $name, $password, $email, $profile = null, $created = null) 
     {
         $now = gmdate('Y-m-d H:i:s');
      
@@ -263,6 +270,7 @@ class UsersController extends \Anax\Users\UsersController implements \Anax\DI\II
             'name' => $name,
             'password' => password_hash($password, PASSWORD_DEFAULT),
             'email' => $email,
+            'profile' => $profile,
             'created' => $created,
             'updated' => $now
         ]);

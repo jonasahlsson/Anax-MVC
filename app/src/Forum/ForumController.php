@@ -336,10 +336,15 @@ class ForumController implements \Anax\DI\IInjectionAware
      */
     public function overviewQuestionAction()
     {
+        // fetch questions
         $all = $this->question->findAll();
 
+        // fetch tags
+        $tags = $this->tag->fetchTags($id);
+        
         // markdown filter
         foreach($all as $question) {
+            
             $question->content = $this->textFilter->doFilter($question->content, 'markdown');
         }
     
@@ -348,7 +353,7 @@ class ForumController implements \Anax\DI\IInjectionAware
         $this->views->add('forum/overview-question', [
             'title' => "Översikt frågor",
             'questions' => $all,
-            
+            'tags' => $tags,
         ]);
     
     }
@@ -387,7 +392,7 @@ class ForumController implements \Anax\DI\IInjectionAware
             'tags' => [
                 'type'        => 'text',
                 'label'       => 'Taggar (ex: #inomhus #sniglar)',
-                'validation'  => array('not_empty', 'custom_test' => array('message' => 'Please only use #, letters, numbers and -.', 'test' => 'return ctype_alnum(str_replace(array(" ","-","_","#"), "", $value));')),
+                'validation'  => array('custom_test' => array('message' => 'Please only use #, letters, numbers and -.', 'test' => 'return empty($value) OR ctype_alnum(str_replace(array(" ","-","_","#"), "", $value));')),
             ],
 
             'spara' => [
@@ -560,6 +565,7 @@ class ForumController implements \Anax\DI\IInjectionAware
                 'type'        => 'text',
                 'value'       => $this->tag->tagsToString($id),
                 'label'       => 'Taggar (ex: #inomhus #sniglar)',
+                'validation'  => array('custom_test' => array('message' => 'Please only use #, letters, numbers and -.', 'test' => 'return empty($value) OR ctype_alnum(str_replace(array(" ","-","_","#"), "", $value));')),
             ],
             
             'spara' => [

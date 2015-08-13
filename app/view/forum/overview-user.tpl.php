@@ -3,13 +3,13 @@
 <?php if (is_array($users)) :?>
     <ul>
         <?php foreach ($users as $user) :?>
-            <a href='<?=$this->url->create("users/id/{$user->id}") ?>'>
-                <li class='question-thumb'>
-                    <?=$user->name ?>
-                    <br>
+            <li class='user-thumb'>
+                <a href='<?=$this->url->create("users/id/{$user->id}") ?>'>
                     <?=$this->users->fetchGravatar($user->id);?>
-                </li>
-            </a>
+                    <?=$user->name ?>
+                </a>
+            </li>
+            
         <?php endforeach; ?>        
     </ul>
 <?php endif;?>    

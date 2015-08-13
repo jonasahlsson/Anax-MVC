@@ -850,6 +850,30 @@ li.top-users {
   vertical-align: top;
   margin-right: 3em;
 }
+li.tag-thumb {
+  display: inline-block;
+  margin-right: 1em;
+  background-color: #ccc;
+  padding: 0.5em;
+  -webkit-border-radius: 0.4em;
+  -moz-border-radius: 0.4em;
+  border-radius: 0.4em;
+}
+li.user-thumb {
+  display: inline-block;
+  margin-right: 1em;
+  background-color: #ccc;
+  padding: 0.5em;
+  -webkit-border-radius: 0.4em;
+  -moz-border-radius: 0.4em;
+  border-radius: 0.4em;
+}
+li.question-thumb {
+  border-bottom: 1px dotted;
+  color: #888;
+  padding-top: 1em;
+  padding-bottom: 1em;
+}
 .question,
 .answer {
   border-bottom: 1px dotted;

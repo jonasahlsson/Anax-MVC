@@ -17,7 +17,7 @@ class User extends \Anax\Users\User
     public function fetchGravatar($id, $size = 40) 
     {
         $user = $this->find($id);    
-        return '<img src="http://www.gravatar.com/avatar/' . md5( strtolower( trim( $user->email ) ) ) . '?d=mm&s=' . $size . '">';
+        return '<img src="http://www.gravatar.com/avatar/' . md5( strtolower( trim( $user->email ) ) ) . '?d=mm&amp;s=' . $size . '" alt="user picture from gravatar">';
     }
  
     /**

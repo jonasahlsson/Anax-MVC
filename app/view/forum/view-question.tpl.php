@@ -6,13 +6,14 @@
         <div class='wrap-question'>
             <!--Question-->
             <div class='question'>
-                <p><?=$question->content ?></p>
+                <?=$question->content ?>
                 
                 <?php if (is_array($tags)) : ?>
                     <ul class='tags'>
                         <?php foreach($tags as $tag): ?>
-                            <a href='<?=$this->url->create("forum/view-tag/{$tag->tag_id}") ?>'>
-                            <li class='tag'><?=$tag->tag_text ?></li>
+                            <li class='tag tag-thumb'>
+                                <a href='<?=$this->url->create("forum/view-tag/{$tag->tag_id}") ?>'><i class="fa fa-tag"></i> <?=$tag->tag_text ?></a>
+                            </li>
                         <?php endforeach; ?>
                     </ul>
                 <?php endif; ?>
@@ -54,7 +55,7 @@
                 <hr>
                     <div class='wrap-answer'>
                         <div class='answer'>
-                            <p><?=$answer->content ?></p>
+                            <?=$answer->content ?>
                             
                             <div class="author right smaller">
                                 <?=$this->users->fetchGravatar($answer->user_id) ?>

@@ -4,11 +4,16 @@
     <div class='user-gravatar'>
         <?=$this->users->fetchGravatar($user->id, 120);?>    
     </div>    
+    
     <div>
+    
         Användarnamn: <?=$user->acronym ?>
         <br>
         Namn: <?=$user->name ?>
         <br>
+        Profil: <?=$user->profile ?>
+        <br>
+        
         <a href='<?=$this->url->create("users/edit/{$user->id}")?>'><span class='edit-link'>Redigera</span></a>
     </div>
     <hr>
