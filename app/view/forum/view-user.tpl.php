@@ -26,11 +26,11 @@
             <h3>Frågor</h3>
                 <ul>
                     <?php foreach($questions as $question): ?>
-                        <a href='<?=$this->url->create("forum/view/{$question->id}") ?>'>
-                            <li>
+                        <li>
+                            <a href='<?=$this->url->create("forum/view/{$question->id}") ?>'>
                                 <?= $question->title; ?>
-                            </li>    
-                        </a>    
+                            </a>        
+                        </li>
                     <?php endforeach; ?>
                 </ul>
         </div>        
@@ -42,11 +42,11 @@
             <h3>Svar</h3>
                 <ul>
                     <?php foreach($answers as $answer): ?>
-                    <a href='<?=$this->url->create("forum/view/{$answer->question_id}") ?>'>
-                        <li>
+                    <li>
+                        <a href='<?=$this->url->create("forum/view/{$answer->question_id}") ?>'>
                             <?= $answer->content; ?>
-                        </li>    
-                    </a>    
+                        </a>    
+                    </li>
                     <?php endforeach; ?>
                 </ul>
         </div>        
@@ -58,11 +58,12 @@
             <h3>Kommentarer</h3>
                 <ul>
                     <?php foreach($comments as $comment): ?>
-                    <a href='<?=$this->url->create("forum/view/{$comment->question_id}") ?>'>
-                        <li>
+                    <li>
+                        <a href='<?=$this->url->create("forum/view/{$comment->question_id}") ?>'>
+                        
                             <?= $comment->content; ?>
-                        </li>    
-                    </a>    
+                        </a>
+                    </li>    
                     <?php endforeach; ?>
                 </ul>
         </div>       

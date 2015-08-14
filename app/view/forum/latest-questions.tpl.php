@@ -11,7 +11,6 @@
                     </a>    
                 <span class='author smaller'><?=$question->timestamp ?></span>
             </li>
-            <hr>
         <?php endforeach; ?>        
     </ul>
 <?php endif;?>    

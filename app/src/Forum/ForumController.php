@@ -1071,13 +1071,18 @@ class ForumController implements \Anax\DI\IInjectionAware
         // fetch latest questions
         $all = $this->question->latestQuestions(5);
 
-        // markdown filter
+        // fetch tags for questions and apply markdown filter
         foreach($all as $question) {
+            // fetch array of objects with tag info
+            $question->tags = $this->tag->findTagByQuestion($question->id);
+            
+            // markdown filter
             $question->content = $this->textFilter->doFilter($question->content, 'markdown');
         }
     
         // add view
         $this->views->add('forum/latest-questions', [
+        // $this->views->add('forum/overview-question', [
             'title' => "Senaste frågorna",
             'questions' => $all,
         ]);

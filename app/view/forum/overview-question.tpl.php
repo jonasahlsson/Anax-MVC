@@ -18,7 +18,7 @@
                 <div class='question-thumb-tags'>
                     <ul>
                         <?php foreach($question->tags as $tag): ?>
-                        <a href='<?=$this->url->create("forum/view-tag/{$tag->tag_id}") ?>'> #<?=$tag->tag_text ?></a>
+                            <a href='<?=$this->url->create("forum/view-tag/{$tag->tag_id}") ?>'> #<?=$tag->tag_text ?></a>
                         <?php endforeach; ?>
                     </ul>    
                     <?php endif ?>
