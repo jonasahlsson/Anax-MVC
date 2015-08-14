@@ -14,10 +14,6 @@ class CUserForm extends \Mos\HTMLForm\CForm
     private $user;
 
     
-
-    
-    
-    
     /**
      * Constructor
      *
@@ -34,7 +30,8 @@ class CUserForm extends \Mos\HTMLForm\CForm
         $id = isset($user->id) ? htmlentities($user->id) : null;
         $created = isset($user->created) ? htmlentities($user->created) : null;
 
-        parent::__construct([], [
+        // form for new users
+        $newForm = [
             'id' => [
                 'type'        => 'hidden',
                 'label'       => 'ID:',
@@ -58,16 +55,11 @@ class CUserForm extends \Mos\HTMLForm\CForm
                 'validation' => array('not_empty', 'custom_test' => array('message' => 'Please use only letters and numbers.', 'test' => 'return ctype_alnum(str_replace(array(" ","-","_"), "", $value));')),
             ],
             'profile' => [
-                'type'        => 'text',
+                'type'        => 'textarea',
                 'label'       => 'Presentation:',
                 'value'       => $profile,
             ],
-            'password' => [
-                'type'        => 'password',
-                'label'       => 'Lösenord:',
-                'required'    => true,
-                'validation'  => ['not_empty'],
-            ],
+
             'email' => [
                 'type'        => 'text',
                 'required'    => true,
@@ -79,17 +71,112 @@ class CUserForm extends \Mos\HTMLForm\CForm
                 'type'        => 'hidden',
                 'value'       => $created,
             ],
-
+            
+            'password' => [
+                'type'        => 'password',
+                'label'       => 'Lösenord:',
+                'required'    => true,
+                'validation'  => ['not_empty'],
+            ],
+            
+            // $changePassword
+            // 'new-password' => [
+                // 'type'        => 'password',
+                // 'label'       => 'Nytt Lösenord:',
+            // ],
+            // 'new-password-check' => [
+                // 'type'        => 'password',
+                // 'label'       => 'Bekräfta nytt lösenord:',
+                // 'validation'  => ['match' => 'new-password'],
+            // ],
+            
             'spara' => [
                 'type'      => 'submit',
                 'callback'  => [$this, 'callbackSubmit'],
             ],
+            
             // 'submit-fail' => [
                 // 'type'      => 'submit',
                 // 'callback'  => [$this, 'callbackSubmitFail'],
             // ],
             
-        ]);
+        ];
+        
+        // form for existing users
+        $editForm = [
+            'id' => [
+                'type'        => 'hidden',
+                'label'       => 'ID:',
+                'value'       => $id,
+            ],
+            'acronym' => [
+                'type'        => 'text',
+                'label'       => 'Användarnamn:',
+                'value'       => $acronym,
+                'required'    => true,
+                // allow only letters, numbers, ' ', '-' and '_'
+                'validation' => array('not_empty', 'custom_test' => array('message' => 'Please use only letters and numbers.', 'test' => 'return ctype_alnum(str_replace(array(" ","-","_"), "", $value));')),
+            ],
+            'name' => [
+                'type'        => 'text',
+                'label'       => 'Namn:',
+                'value'       => $name,
+                'required'    => true,
+                // 'validation'  => ['not_empty'] 
+                // allow only letters, numbers, ' ', '-' and '_'
+                'validation' => array('not_empty', 'custom_test' => array('message' => 'Please use only letters and numbers.', 'test' => 'return ctype_alnum(str_replace(array(" ","-","_"), "", $value));')),
+            ],
+            'profile' => [
+                'type'        => 'textarea',
+                'label'       => 'Presentation:',
+                'value'       => $profile,
+            ],
+
+            'email' => [
+                'type'        => 'text',
+                'required'    => true,
+                'label'       => 'e-post',
+                'value'       => $email,
+                'validation'  => ['not_empty', 'email_adress'],
+            ],
+            'created' => [
+                'type'        => 'hidden',
+                'value'       => $created,
+            ],
+            
+            'password' => [
+                'type'        => 'password',
+                'label'       => 'Lösenord:',
+                'required'    => true,
+                'validation'  => ['not_empty'],
+            ],
+            
+            'new-password' => [
+                'type'        => 'password',
+                'label'       => 'Nytt Lösenord:',
+            ],
+            'new-password-check' => [
+                'type'        => 'password',
+                'label'       => 'Bekräfta nytt lösenord:',
+                'validation'  => ['match' => 'new-password'],
+            ],
+            
+            'spara' => [
+                'type'      => 'submit',
+                'callback'  => [$this, 'callbackSubmit'],
+            ],
+            
+            // 'submit-fail' => [
+                // 'type'      => 'submit',
+                // 'callback'  => [$this, 'callbackSubmitFail'],
+            // ],
+            
+        ];
+        
+        // pick form, if no id go with newForm if id is available it's an edit
+        $form = empty($id) ? $newForm : $editForm;
+        
+        parent::__construct([], $form);
     }
 
 
@@ -128,8 +215,9 @@ class CUserForm extends \Mos\HTMLForm\CForm
                 $this->Value('name'),
                 $this->Value('password'),
                 $this->Value('email'),
-                $this->Value('profile'),
-                $created
+                $this->Value('profile'),                
+                $created,
+                $this->Value('new-password')
             );
     
             //$this->saveInSession = true;

@@ -129,6 +129,12 @@ class ForumController implements \Anax\DI\IInjectionAware
         dump($_SESSION);
         // dump($this->di);
         
+        $content = $this->di->fileContent->get('forum/README_new.md');
+        $content = $this->di->textFilter->doFilter($content, 'shortcode, markdown');
+    
+    $this->di->views->add('forum/content', [
+        'content' => $content,
+    ]);
     }
     
     /**
@@ -338,13 +344,17 @@ class ForumController implements \Anax\DI\IInjectionAware
     {
         // fetch questions
         $all = $this->question->findAll();
-
-        // fetch tags
-        $tags = $this->tag->fetchTags($id);
         
-        // markdown filter
+        
+        
+        
+        // fetch tags, run markdown filter
         foreach($all as $question) {
             
+            // fetch array of objects with tag info
+            $question->tags = $this->tag->findTagByQuestion($question->id);
+            
+            // markdown filter
             $question->content = $this->textFilter->doFilter($question->content, 'markdown');
         }
     
@@ -353,7 +363,6 @@ class ForumController implements \Anax\DI\IInjectionAware
         $this->views->add('forum/overview-question', [
             'title' => "Översikt frågor",
             'questions' => $all,
-            'tags' => $tags,
         ]);
     
     }

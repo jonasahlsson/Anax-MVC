@@ -11,7 +11,14 @@
                         <?=$this->users->fetchName($question->user_id); ?>
                     </a>    
                     <?=$question->timestamp ?>
-                    <br>
+                    <?php if (is_array($question->tags)): ?>
+                    <ul>
+                        <?php foreach($question->tags as $tag): ?>
+                        <a href='<?=$this->url->create("forum/view-tag/{$tag->tag_id}") ?>'> #<?=$tag->tag_text ?></a>
+                        <?php endforeach; ?>
+                    </ul>    
+                    <?php endif ?>
+                    
                 </div>
             </li>
             

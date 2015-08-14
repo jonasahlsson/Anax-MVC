@@ -102,24 +102,31 @@ class Tag extends \Anax\MVC\CDatabaseModel
             ORDER BY q.id DESC; "; 
         $params = [$tag_id];
         
-            // $sqlOrig = '
-      // SELECT 
-        // M.*,
-        // GROUP_CONCAT(G.name) AS genre
-      // FROM Movie AS M
-        // LEFT OUTER JOIN Movie2Genre AS M2G
-          // ON M.id = M2G.idMovie
-        // INNER JOIN Genre AS G
-          // ON M2G.idGenre = G.id
-    // ';
-        
-        
-        
-        //$this->db->setFetchMode(\PDO::FETCH_ASSOC);
         return $this->db->executeFetchAll($sql, $params);
-        //Dump($test);
-    
     }
+    
+    
+    /**
+     *  Find tags by question_id
+     *  
+     *  @return array 
+     */
+    public function findTagByQuestion($question_id)
+    {
+    // find tags associated with a question
+        $sql = "SELECT t.tag_text, t2q.question_id, t2q.tag_id 
+            FROM tag as t
+            LEFT OUTER JOIN tag2question AS t2q
+            ON t2q.tag_id = t.id
+            LEFT OUTER JOIN question as q
+            ON t2q.question_id = q.id
+            WHERE t2q.question_id = ?
+            ORDER BY q.id DESC; "; 
+        $params = [$question_id];
+        
+        return $this->db->executeFetchAll($sql, $params);
+    }
+    
     
     /**
      *  Fetch name of tag

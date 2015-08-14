@@ -261,14 +261,17 @@ class UsersController extends \Anax\Users\UsersController implements \Anax\DI\II
      *
      * @return void
      */
-    public function saveUser($acronym, $name, $password, $email, $profile = null, $created = null) 
+    public function saveUser($acronym, $name, $password, $email, $profile = null, $created = null, $newPassword = null) 
     {
         $now = gmdate('Y-m-d H:i:s');
+     
+        // save new password if supplied
+        $savePassword = !empty($newPassword) ? $newPassword : $password;
      
         $this->users->save([
             'acronym' => $acronym,
             'name' => $name,
-            'password' => password_hash($password, PASSWORD_DEFAULT),
+            'password' => password_hash($savePassword, PASSWORD_DEFAULT),
             'email' => $email,
             'profile' => $profile,
             'created' => $created,

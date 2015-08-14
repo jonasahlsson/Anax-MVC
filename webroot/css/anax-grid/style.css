@@ -910,6 +910,14 @@ li.question-thumb {
 .smaller {
   font-size: smaller;
 }
+#form-element-title,
+#form-element-content,
+#form-element-tags {
+  width: 100%;
+}
+#form-element-profile {
+  width: 100%;
+}
 @font-face {
   font-family: 'FontAwesome';
   src: url('font-awesome-4.3.0/fonts/fontawesome-webfont.eot?v=4.3.0');

@@ -67,7 +67,7 @@ class UserFormController
             // 'links' => [['href' => 'users/create', 'text' => 'Skapa ny användare' ]]
         ]);
         
-        $this->di->views->addString("<p><a href='{$this->di->url->create("users/create")}'>SKAPA NY ANVÄNDARE</a></p>");
+        $this->di->views->addString("<p><a href='{$this->di->url->create("users/add")}'>SKAPA NY ANVÄNDARE</a></p>");
         
         $testInfo = "<p>Det finns två testanvändare. admin/admin samt doe/doe.</p>";
         
