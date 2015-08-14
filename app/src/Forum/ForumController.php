@@ -345,9 +345,6 @@ class ForumController implements \Anax\DI\IInjectionAware
         // fetch questions
         $all = $this->question->findAll();
         
-        
-        
-        
         // fetch tags, run markdown filter
         foreach($all as $question) {
             
@@ -364,7 +361,10 @@ class ForumController implements \Anax\DI\IInjectionAware
             'title' => "Översikt frågor",
             'questions' => $all,
         ]);
-    
+        
+        $this->views->addString("<a href='" . $this->url->create('forum/new-question') . "'>STÄLL DIN FRÅGA!</a>");
+        
+        
     }
     
     
@@ -655,13 +655,18 @@ class ForumController implements \Anax\DI\IInjectionAware
         $this->theme->setTitle('Tagg');
         $questions = $this->tag->findQuestionByTag($tag_id);
 
-        // questionComments
+        // fetch tags for each question and run markdown filter
         foreach($questions as $question) {
+        
+            // fetch array of objects with tag info
+            $question->tags = $this->tag->findTagByQuestion($question->user_id);
+        
             $question->content = $this->textFilter->doFilter($question->content, 'markdown');
         };
         
         
-        $this->views->add('forum/view-question-by-tag', [
+        // $this->views->add('forum/view-question-by-tag', [
+        $this->views->add('forum/overview-question', [
             'title' => "Frågor med tagg #{$this->tag->find($tag_id)->tag_text}",
             'questions' => $questions
         ]);
