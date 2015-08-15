@@ -259,6 +259,11 @@ class UsersController extends \Anax\Users\UsersController implements \Anax\DI\II
         //fetch user if id was supplied
         $user = isset($id) ? $this->users->find($id) : null;
         
+        // check editing rights
+        if(!($this->users->verifyLoggedInAs($this->users->id))) {
+            die("Du saknar rättigheter för den här åtgärden.");
+        }
+        
         // display userform
         $controller = new \Joah\UserForm\UserFormController();
         $controller->setDI($this->di);

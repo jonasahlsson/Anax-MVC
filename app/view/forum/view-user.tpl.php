@@ -24,11 +24,11 @@
         <?php if (!empty($questions)): ?>
         <div class='user-questions'>
             <h3>Frågor</h3>
-                <ul>
+                <ul class="fa-ul">
                     <?php foreach($questions as $question): ?>
                         <li>
                             <a href='<?=$this->url->create("forum/view/{$question->id}") ?>'>
-                                <?= $question->title; ?>
+                                <i class="fa-li fa fa-question"></i><?= $question->title; ?>
                             </a>        
                         </li>
                     <?php endforeach; ?>
@@ -40,11 +40,11 @@
         <?php if (!empty($answers)): ?>
         <div class='user-answers'>
             <h3>Svar</h3>
-                <ul>
+                <ul class="fa-ul">
                     <?php foreach($answers as $answer): ?>
                     <li>
                         <a href='<?=$this->url->create("forum/view/{$answer->question_id}") ?>'>
-                            <?= $answer->content; ?>
+                            <i class="fa-li fa fa-exclamation"></i> <?= trim_text($answer->content, 149); ?>
                         </a>    
                     </li>
                     <?php endforeach; ?>
@@ -56,12 +56,11 @@
         <?php if (!empty($comments)): ?>
         <div class='user-comments'>
             <h3>Kommentarer</h3>
-                <ul>
+                <ul class="fa-ul">
                     <?php foreach($comments as $comment): ?>
                     <li>
                         <a href='<?=$this->url->create("forum/view/{$comment->question_id}") ?>'>
-                        
-                            <?= $comment->content; ?>
+                            <i class="fa-li fa fa-commenting"></i> <?= trim_text($comment->content, 149); ?>
                         </a>
                     </li>    
                     <?php endforeach; ?>

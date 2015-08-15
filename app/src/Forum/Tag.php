@@ -92,7 +92,7 @@ class Tag extends \Anax\MVC\CDatabaseModel
     public function findQuestionByTag($tag_id)
     {
     // find questions associated with a tag_id
-        $sql = "SELECT t.tag_text, t2q.question_id, q.title, q.content, q.user_id, q.timestamp, t2q.tag_id 
+        $sql = "SELECT t.tag_text, t2q.question_id as id, q.title, q.content, q.user_id, q.timestamp, t2q.tag_id 
             FROM tag as t
             LEFT OUTER JOIN tag2question AS t2q
             ON t2q.tag_id = t.id

@@ -214,7 +214,7 @@ När jag dricker *läsk på burk* så får jag ofta problem med att jag inte kan
             1,
             null,
             'Jag har samma problem! Vad har du provat hittills? Själv har jag provat att flytta upp mina tomatplantor på balkongen, 
-            med de slemmiga sniglarna klättrar upp för väggarna. Fasaden på huset har blivit funktskadat av allt snigelslem.',
+            med de slemmiga sniglarna klättrar upp för väggarna. Fasaden på huset har blivit funktskadad av allt snigelslem.',
             2,
             $now
         ]);
@@ -710,7 +710,7 @@ När jag dricker *läsk på burk* så får jag ofta problem med att jag inte kan
         foreach($questions as $question) {
         
             // fetch array of objects with tag info
-            $question->tags = $this->tag->findTagByQuestion($question->user_id);
+            $question->tags = $this->tag->findTagByQuestion($question->id);
         
             $question->content = $this->textFilter->doFilter($question->content, 'markdown');
             $question->content = $this->HTMLPurifier->purify($question->content);
