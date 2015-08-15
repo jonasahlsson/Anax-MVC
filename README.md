@@ -19,13 +19,16 @@ Read article about Anax-MVC here: ["Anax som MVC-ramverk"](http://dbwebb.se/kuns
 >cd WGTOTW  
 >composer install
 
-* Change permissions for databasefolder, database, style-folder
+* Change permissions for databasefolder, database, style-folder and HTMLPurifiers cache.
 
 > chmod 777 webroot/database  
 
 > chmod 777 webroot/database/database.sqlite  
 
 > chmod 777 webroot/css/anax-grid  
+
+> chmod -R 777 vendor/ezyang/htmlpurifier/library/HTMLPurifier/DefinitionCache/Serializer  
+
 
 * Edit RewriteBase in .htaccess if necessary.
 

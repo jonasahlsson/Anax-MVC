@@ -856,7 +856,7 @@ li.top-users {
 }
 li.tag-thumb {
   display: inline-block;
-  margin-right: 1em;
+  margin: 0.5em;
   background-color: #ccc;
   padding: 0.5em;
   -webkit-border-radius: 0.4em;
