@@ -46,7 +46,12 @@ $di->set('users', function () use ($di) {
     // return $question;
 // });
 
-
+// setup a html purifier service
+$di->setShared('HTMLPurifier', function(){
+    $config = HTMLPurifier_Config::createDefault();
+    $purifier = new HTMLPurifier($config);
+    return $purifier;
+});
 
 // forum
 // Create forumcontroller

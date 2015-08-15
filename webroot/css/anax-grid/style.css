@@ -611,6 +611,10 @@ img.sitelogo {
 .sitefooter {
   color: #666;
 }
+article {
+  border-bottom: 1px dashed #ccc;
+  overflow: auto;
+}
 .article1 {
   overflow: auto;
 }

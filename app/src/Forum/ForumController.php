@@ -292,23 +292,27 @@ class ForumController implements \Anax\DI\IInjectionAware
         // comments belonging to answers as array of object
         $answerComments = $this->comment->findAnswerComments($id);
         
-        // run content through markdown filter
+        // run content through markdown and HTMLPurifier filters
         // question
         $question->content = $this->textFilter->doFilter($question->content, 'markdown');
-
+        $question->content = $this->HTMLPurifier->purify($question->content);
+        
         // questionComments
         foreach($questionComments as $comment) {
             $comment->content = $this->textFilter->doFilter($comment->content, 'markdown');
+            $comment->content = $this->HTMLPurifier->purify($comment->content);
         }
         
         // answers
         foreach($answers as $answer) {
             $answer->content = $this->textFilter->doFilter($answer->content, 'markdown');
+            $answer->content = $this->HTMLPurifier->purify($answer->content);
         }
         
         // answerComments
         foreach($answerComments as $comment) {
             $comment->content = $this->textFilter->doFilter($comment->content, 'markdown');
+            $comment->content = $this->HTMLPurifier->purify($comment->content);
         }
 
         
@@ -351,8 +355,9 @@ class ForumController implements \Anax\DI\IInjectionAware
             // fetch array of objects with tag info
             $question->tags = $this->tag->findTagByQuestion($question->id);
             
-            // markdown filter
+            // markdown and HTMLPurifier filter
             $question->content = $this->textFilter->doFilter($question->content, 'markdown');
+            $question->content = $this->HTMLPurifier->purify($question->content);
         }
     
     
@@ -662,6 +667,7 @@ class ForumController implements \Anax\DI\IInjectionAware
             $question->tags = $this->tag->findTagByQuestion($question->user_id);
         
             $question->content = $this->textFilter->doFilter($question->content, 'markdown');
+            $question->content = $this->HTMLPurifier->purify($question->content);
         };
         
         
@@ -687,12 +693,14 @@ class ForumController implements \Anax\DI\IInjectionAware
         $answers = $this->answer->findAnswerByUser($user_id);
         $comments = $this->comment->findCommentByUser($user_id);
         
-        // makdown filter
+        // makdown and HTMLPurifier filter
         foreach($answers as $answer) {
             $answer->content = $this->textFilter->doFilter($answer->content, 'markdown');
+            $answer->content = $this->HTMLPurifier->purify($answer->content);
         }
         foreach($comments as $comment) {
             $comment->content = $this->textFilter->doFilter($comment->content, 'markdown');
+            $comment->content = $this->HTMLPurifier->purify($comment->content);
         }
         
         
@@ -1076,8 +1084,9 @@ class ForumController implements \Anax\DI\IInjectionAware
             // fetch array of objects with tag info
             $question->tags = $this->tag->findTagByQuestion($question->id);
             
-            // markdown filter
+            // markdown and HTMLPurifier filter
             $question->content = $this->textFilter->doFilter($question->content, 'markdown');
+            $question->content = $this->HTMLPurifier->purify($question->content);
         }
     
         // add view

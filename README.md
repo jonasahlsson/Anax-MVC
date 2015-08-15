@@ -25,7 +25,7 @@ Read article about Anax-MVC here: ["Anax som MVC-ramverk"](http://dbwebb.se/kuns
 
 > chmod 777 webroot/database/database.sqlite  
 
-> chmod 777 webroot/database/css/anax-grid  
+> chmod 777 webroot/css/anax-grid  
 
 * Edit RewriteBase in .htaccess if necessary.
 
@@ -42,6 +42,7 @@ External modules are included and subject to its own license.
 * PHP Markdown
 * Modernizr
 * Font Awesome
+* lessphp
 
 
 

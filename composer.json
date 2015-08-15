@@ -16,7 +16,8 @@
     "require": {
         "php": ">=5.4",
         "mos/cform": "2.*@dev",
-        "mos/cdatabase": "dev-master"
+        "mos/cdatabase": "dev-master",
+        "ezyang/htmlpurifier": "4.7"
 
     },
     "autoload": {

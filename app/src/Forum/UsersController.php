@@ -203,8 +203,9 @@ class UsersController extends \Anax\Users\UsersController implements \Anax\DI\II
         // fetch and extract questions, answers and comments to variables
         extract($this->di->ForumController->fetchUserContribution($id));
         
-        // markdown filter 
+        // markdown and HTMLPurifier filter 
         $user->profile = $this->textFilter->doFilter($user->profile, 'markdown');
+        $user->profile = $this->HTMLPurifier->purify($user->profile);
         
         $this->theme->setTitle("Visa användare");
         $this->views->add('forum/view-user', [
