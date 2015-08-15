@@ -22,13 +22,13 @@ class CUserForm extends \Mos\HTMLForm\CForm
     {
 
         $this->user = $user;
-        $acronym = isset($user->acronym) ? htmlentities($user->acronym) : null;
-        $name = isset($user->name) ? htmlentities($user->name) : null;
-        $password = isset($user->password) ? htmlentities($user->password) : null;
-        $email = isset($user->email) ? htmlentities($user->email) : null;
+        $acronym = isset($user->acronym) ? $user->acronym : null;
+        $name = isset($user->name) ? $user->name : null;
+        $password = isset($user->password) ? $user->password : null;
+        $email = isset($user->email) ? $user->email : null;
         $profile = isset($user->profile) ? $user->profile : null;
-        $id = isset($user->id) ? htmlentities($user->id) : null;
-        $created = isset($user->created) ? htmlentities($user->created) : null;
+        $id = is_numeric($user->id) ? $user->id : null;
+        $created = isset($user->created) ? $user->created : null;
 
         // form for new users
         $newForm = [
@@ -43,7 +43,7 @@ class CUserForm extends \Mos\HTMLForm\CForm
                 'value'       => $acronym,
                 'required'    => true,
                 // allow only letters, numbers, ' ', '-' and '_'
-                'validation' => array('not_empty', 'custom_test' => array('message' => 'Please use only letters and numbers.', 'test' => 'return ctype_alnum(str_replace(array(" ","-","_"), "", $value));')),
+                'validation'  => array('custom_test' => array('message' => 'Please only use #, letters, numbers and -.', 'test' => 'return empty($value) OR ctype_alnum(str_replace(array(" ","-","_","å","ä","ö"), "", $value));')),
             ],
             'name' => [
                 'type'        => 'text',
@@ -52,7 +52,7 @@ class CUserForm extends \Mos\HTMLForm\CForm
                 'required'    => true,
                 // 'validation'  => ['not_empty'] 
                 // allow only letters, numbers, ' ', '-' and '_'
-                'validation' => array('not_empty', 'custom_test' => array('message' => 'Please use only letters and numbers.', 'test' => 'return ctype_alnum(str_replace(array(" ","-","_"), "", $value));')),
+                'validation'  => array('custom_test' => array('message' => 'Please only use #, letters, numbers and -.', 'test' => 'return empty($value) OR ctype_alnum(str_replace(array(" ","-","_","å","ä","ö"), "", $value));')),
             ],
             'profile' => [
                 'type'        => 'textarea',
@@ -115,7 +115,7 @@ class CUserForm extends \Mos\HTMLForm\CForm
                 'value'       => $acronym,
                 'required'    => true,
                 // allow only letters, numbers, ' ', '-' and '_'
-                'validation' => array('not_empty', 'custom_test' => array('message' => 'Please use only letters and numbers.', 'test' => 'return ctype_alnum(str_replace(array(" ","-","_"), "", $value));')),
+                'validation'  => array('custom_test' => array('message' => 'Please only use #, letters, numbers and -.', 'test' => 'return empty($value) OR ctype_alnum(str_replace(array(" ","-","_","å","ä","ö"), "", $value));')),
             ],
             'name' => [
                 'type'        => 'text',
@@ -124,7 +124,7 @@ class CUserForm extends \Mos\HTMLForm\CForm
                 'required'    => true,
                 // 'validation'  => ['not_empty'] 
                 // allow only letters, numbers, ' ', '-' and '_'
-                'validation' => array('not_empty', 'custom_test' => array('message' => 'Please use only letters and numbers.', 'test' => 'return ctype_alnum(str_replace(array(" ","-","_"), "", $value));')),
+                'validation'  => array('custom_test' => array('message' => 'Please only use #, letters, numbers and -.', 'test' => 'return empty($value) OR ctype_alnum(str_replace(array(" ","-","_","å","ä","ö"), "", $value));')),
             ],
             'profile' => [
                 'type'        => 'textarea',

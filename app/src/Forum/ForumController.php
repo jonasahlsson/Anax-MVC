@@ -161,12 +161,27 @@ class ForumController implements \Anax\DI\IInjectionAware
         );
      
         $this->db->execute([
-            'testfråga1',
-            'Det här är en **frågetext** till *testfråga1*',
+            'Hur jagar ni sniglar?',
+            'Jag har stora problem med **sniglar** som äter upp mina **smultron**.  Jag blir jättearg när jag tänker på det. Är det någon som har bra tips på hur man jagar sniglar!?',
             1,
             $now
         ]);
 
+        $this->db->execute([
+            'Hur får man ur det sista ur burken?',
+            '###Jag gillar läsk### 
+När jag dricker *läsk på burk* så får jag ofta problem med att jag inte kan få ur det sista ur burken. Jag brukar kasta fram och tillbaka med huvudet. Headbangarn lite som en hårdrockar, för att få ut det sista. Men är det en varm dag så hinner läsken torka fast innan jag har fått ut sista droppen! Vad ska jag göra för att få ut det sista ur burken?',
+            2,
+            $now
+        ]);
+        
+        $this->db->execute([
+            'Jag vill inte gå ut',
+            'Jag gillar att vara inomhus. Jag trivs inte utomhus. Måste jag verkligen gå ut bara för att det *är fint väder*?',
+            2,
+            $now
+        ]);
+        
         
         // test data answer
         $this->db->insert(
@@ -176,15 +191,15 @@ class ForumController implements \Anax\DI\IInjectionAware
         
         $this->db->execute([
             1,
-            'Det här är en **svarstext1** kopplad till *testfråga1*',
+            'Jag plockar dem i en hink. Jag ser det som bra vardagsmotion och jag brukar göra utfallssteg när jag plockar dem. Sen tömmer jag hinken i min chefs trädgård. Jag är missnöjd med min lön.',
             2,
             $now
         ]);
         
         $this->db->execute([
             1,
-            'Det här är en **svarstext2** kopplad till *testfråga1*',
-            1,
+            'Jag klipper sniglarna med en **sax**.',
+            3,
             $now
         ]);
 
@@ -198,16 +213,25 @@ class ForumController implements \Anax\DI\IInjectionAware
         $this->db->execute([
             1,
             null,
-            'Det här är en **kommentarstext1** kopplad till *testfråga1*',
+            'Jag har samma problem! Vad har du provat hittills? Själv har jag provat att flytta upp mina tomatplantor på balkongen, 
+            med de slemmiga sniglarna klättrar upp för väggarna. Fasaden på huset har blivit funktskadat av allt snigelslem.',
             2,
             $now
         ]);
-        
+
+        // test data question comment 
+        $this->db->execute([
+            1,
+            null,
+            'Jag har också det här problemet!',
+            3,
+            $now
+        ]);
         // test data answer comment 
         $this->db->execute([
             1,
             1,
-            'Det här är en **kommentarstext1** kopplad till svar1 på *fråga1*',
+            'Använder du **handskar**? De är ju ganska slemmiga!',
             1,
             $now
         ]);
@@ -215,16 +239,16 @@ class ForumController implements \Anax\DI\IInjectionAware
         $this->db->execute([
             1,
             1,
-            'Det här är en **kommentarstext2** kopplad till svar1 på *fråga1*',
-            1,
+            'Ja! Hanskar är ett *måste*. Jag använder alltid dubbla par.',
+            2,
             $now
         ]);
 
         $this->db->execute([
             1,
             2,
-            'Det här är en **kommentarstext1** kopplad till svar2 på *fråga1*',
-            2,
+            'I hur många bitar klipper du dem?',
+            1,
             $now
         ]);
 
@@ -247,9 +271,12 @@ class ForumController implements \Anax\DI\IInjectionAware
         ]);
         
         $this->db->execute([
-            'husdjur'
+            'smultron'
         ]);
-
+        
+        $this->db->execute([
+            'läsk'
+        ]);
         // test data tags2question 
         $this->db->insert(
             'tag2question',
@@ -257,7 +284,7 @@ class ForumController implements \Anax\DI\IInjectionAware
         );
 
         $this->db->execute([
-            1,
+            2,
             1
         ]);
 
@@ -266,6 +293,25 @@ class ForumController implements \Anax\DI\IInjectionAware
             1
         ]);
         
+        $this->db->execute([
+            3,
+            1
+        ]);
+        
+        $this->db->execute([
+            5,
+            2
+        ]);
+        
+        $this->db->execute([
+            1,
+            3
+        ]);
+        
+        $this->db->execute([
+            2,
+            3
+        ]);
     }
     
     /**
@@ -406,7 +452,7 @@ class ForumController implements \Anax\DI\IInjectionAware
             'tags' => [
                 'type'        => 'text',
                 'label'       => 'Taggar (ex: #inomhus #sniglar)',
-                'validation'  => array('custom_test' => array('message' => 'Please only use #, letters, numbers and -.', 'test' => 'return empty($value) OR ctype_alnum(str_replace(array(" ","-","_","#"), "", $value));')),
+                'validation'  => array('custom_test' => array('message' => 'Please only use #, letters, numbers and -.', 'test' => 'return empty($value) OR ctype_alnum(str_replace(array(" ","-","_","#","å","ä","ö"), "", $value));')),
             ],
 
             'spara' => [
@@ -579,7 +625,7 @@ class ForumController implements \Anax\DI\IInjectionAware
                 'type'        => 'text',
                 'value'       => $this->tag->tagsToString($id),
                 'label'       => 'Taggar (ex: #inomhus #sniglar)',
-                'validation'  => array('custom_test' => array('message' => 'Please only use #, letters, numbers and -.', 'test' => 'return empty($value) OR ctype_alnum(str_replace(array(" ","-","_","#"), "", $value));')),
+                'validation'  => array('custom_test' => array('message' => 'Please only use #, letters, numbers and -.', 'test' => 'return empty($value) OR ctype_alnum(str_replace(array(" ","-","_","#","å","ä","ö"), "", $value));')),
             ],
             
             'spara' => [

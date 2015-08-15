@@ -161,6 +161,16 @@ class UsersController extends \Anax\Users\UsersController implements \Anax\DI\II
             $now,
             $now
         ]);
+        
+            $this->db->execute([
+            'jonas',
+            'jonasahlsson@hotmail.com',
+            'Jonas Ahlsson',
+            password_hash('jonas', PASSWORD_DEFAULT),
+            'Jag heter Jonas och jag har skapat sidan.',
+            $now,
+            $now
+        ]);
     }
     
     
