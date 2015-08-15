@@ -16,20 +16,15 @@ Read article about Anax-MVC here: ["Anax som MVC-ramverk"](http://dbwebb.se/kuns
 
 * Run composer install to download dependencies. Composer can be downloaded and installed from [composer.org](https://getcomposer.org/).
 
->cd WGTOTW
+>cd WGTOTW  
 >composer install
 
-* Change permissions for webroot/database
+* Change permissions for databasefolder, database, style-folder
+> chmod 777 webroot/database  
 
-> chmod 777 webroot/database
+> chmod 777 webroot/database/database.sqlite  
 
-* Change permissions for webroot/database/database.sqlite 
-
-> chmod 777 webroot/database/database.sqlite
-
-* Change permissions for webroot/database/css/anax-grid
-
-> chmod 777 webroot/database/css/anax-grid
+> chmod 777 webroot/database/css/anax-grid  
 
 * Edit RewriteBase in .htaccess if necessary.
 
