@@ -15,8 +15,6 @@ class Comment extends \Anax\MVC\CDatabaseModel
      */
     public function findQuestionComments($question_id)
     {
-        
-        // $this->db->setVerbose(); 
         $this->db->select()
                 ->from($this->getSource())
                 ->where('question_id = ?')
@@ -35,8 +33,6 @@ class Comment extends \Anax\MVC\CDatabaseModel
      */
     public function findAnswerComments($question_id)
     {
-        
-        // $this->db->setVerbose(); 
         $this->db->select()
                 ->from($this->getSource())
                 ->where('question_id = ?')
@@ -70,8 +66,6 @@ class Comment extends \Anax\MVC\CDatabaseModel
      */
     public function activeUsers($num = null)
     {
-        // $this->db->setVerbose();
-        
         $sql = "SELECT user_id, count(user_id) AS count_user_id
                 FROM {$this->getSource()}
                 GROUP BY user_id
