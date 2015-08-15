@@ -39,9 +39,9 @@ This software is free software and carries a MIT license.
 ##Use of external libraries
 
 External modules are included and subject to its own license.
-*PHP Markdown
-*Modernizr
-*Font Awesome
+* PHP Markdown
+* Modernizr
+* Font Awesome
 
 
 
