@@ -3,7 +3,7 @@ WGTOTW
 
 This is a web application is built as part of the course phpmvc given at Blekinge tekniska högskola. More information can be found at [dbwebb.se](http://dbwebb.se/).
 
-This web application uses Anax-MVC, found @ [github](https://github.com/mosbth/Anax-MVC)
+This web application uses Anax-MVC, found at [Anax-MVC on github](https://github.com/mosbth/Anax-MVC)
 
 Read article about Anax-MVC here: ["Anax som MVC-ramverk"](http://dbwebb.se/kunskap/anax-som-mvc-ramverk) and here ["Bygg en me-sida med Anax-MVC"](http://dbwebb.se/kunskap/bygg-en-me-sida-med-anax-mvc).
 
@@ -20,6 +20,7 @@ Read article about Anax-MVC here: ["Anax som MVC-ramverk"](http://dbwebb.se/kuns
 >composer install
 
 * Change permissions for databasefolder, database, style-folder
+
 > chmod 777 webroot/database  
 
 > chmod 777 webroot/database/database.sqlite  
@@ -33,6 +34,15 @@ Read article about Anax-MVC here: ["Anax som MVC-ramverk"](http://dbwebb.se/kuns
 ##License
 
 This software is free software and carries a MIT license.
+
+
+##Use of external libraries
+
+External modules are included and subject to its own license.
+*PHP Markdown
+*Modernizr
+*Font Awesome
+
 
 
 Copyright Jonas Ahlsson 2015, jonasahlsson@hotmail.com
