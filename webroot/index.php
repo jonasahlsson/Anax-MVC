@@ -48,8 +48,9 @@ $di->set('users', function () use ($di) {
 
 // setup a html purifier service
 $di->setShared('HTMLPurifier', function(){
-    $config = HTMLPurifier_Config::createDefault();
-    $purifier = new HTMLPurifier($config);
+    // $config = HTMLPurifier_Config::createDefault();
+    // $purifier = new HTMLPurifier($config);
+    $purifier = new HTMLPurifier();
     return $purifier;
 });
 

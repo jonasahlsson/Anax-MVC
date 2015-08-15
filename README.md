@@ -43,6 +43,7 @@ External modules are included and subject to its own license.
 * Modernizr
 * Font Awesome
 * lessphp
+* HTMLPurifier
 
 
 
