@@ -61,6 +61,7 @@ class ForumController implements \Anax\DI\IInjectionAware
                 'content' => ['text'],
                 'user_id' => ['integer'],
                 'timestamp' => ['datetime'],
+                'accepted_answer' => ['integer'],
             ]
         )->execute();
 
@@ -157,14 +158,15 @@ class ForumController implements \Anax\DI\IInjectionAware
         // test data question
         $this->db->insert(
             'question',
-            ['title', 'content', 'user_id',  'timestamp']
+            ['title', 'content', 'user_id',  'timestamp', 'accepted_answer']
         );
      
         $this->db->execute([
             'Hur jagar ni sniglar?',
             'Jag har stora problem med **sniglar** som äter upp mina **smultron**.  Jag blir jättearg när jag tänker på det. Är det någon som har bra tips på hur man jagar sniglar!?',
             1,
-            $now
+            $now,
+            2
         ]);
 
         $this->db->execute([
@@ -320,12 +322,21 @@ När jag dricker *läsk på burk* så får jag ofta problem med att jag inte kan
     public function viewAction($id)
     {
         
+        // check id is valid
+        if(!is_numeric($id)) {
+            die("ID=$id not recognized");
+        }
+        
         $this->theme->setTitle("Fråga");
         // $this->views->addString('Här kollar vi på en fråga');
         
         // a question, as an object
         $question = $this->question->find($id);
-
+        
+        if(empty($question)){
+            die("question ID=$id was not found");
+        }   
+        
         // fetch tags
         $tags = $this->tag->fetchTags($id);
         
@@ -593,7 +604,7 @@ När jag dricker *läsk på burk* så får jag ofta problem med att jag inte kan
         }
         
         // check editing rights
-        if(!($this->users->verifyLoggedInAs($this->question->user_id))) {
+        if(!($this->users->verifyLogin($this->question->user_id))) {
             die("Du saknar rättigheter för den här åtgärden.");
         }
         
@@ -868,7 +879,7 @@ När jag dricker *läsk på burk* så får jag ofta problem med att jag inte kan
         }
 
         // check editing rights
-        if(!($this->users->verifyLoggedInAs($this->answer->user_id))) {
+        if(!($this->users->verifyLogin($this->answer->user_id))) {
             die("Du saknar rättigheter för den här åtgärden.");
         }      
         
@@ -1053,7 +1064,7 @@ När jag dricker *läsk på burk* så får jag ofta problem med att jag inte kan
         }
         
         // check editing rights
-        if(!($this->users->verifyLoggedInAs($this->comment->user_id))) {
+        if(!($this->users->verifyLogin($this->comment->user_id))) {
             die("Du saknar rättigheter för den här åtgärden.");
         }
         
@@ -1186,5 +1197,48 @@ När jag dricker *läsk på burk* så får jag ofta problem med att jag inte kan
             'title' => "Aktiva användare",
         ]);
     }
+
+    
+    /**
+     * Accept an answer
+     *
+     * @return void
+     */
+     public function acceptAnswerAction($question_id, $answer_id)
+    {
+        // check id is valid and that question and answer exists.
+        if(!is_numeric($question_id) OR !is_numeric($answer_id)) {
+            die("ID not recognized");
+        }
+        
+        $question = $this->question->find($question_id);
+        if(empty($question)){
+            die("question ID=$question_id was not found");
+        }        
+        $answer = $this->answer->find($answer_id);
+        if(empty($answer)){
+            die("answer ID=$answer_id was not found");
+        }                
+        
+        // check if logged in.
+        if($this->users->isLoggedIn()) {
+        // redirect to login page and return after successfull login
+            $this->redirectTo($this->url->create("users/login") . "?url=" . $this->request->getRoute());
+        }
+        
+        // check editing rights
+        if(!($this->users->verifyLogin($this->question->user_id))) {
+            die("Du saknar rättigheter för den här åtgärden.");
+        }
+        
+        // set accepted answer property
+        $this->question->accepted_answer = $answer_id;
+        // save object
+        $this->question->save();
+        // redirect to question page
+        $this->redirectTo($this->url->create("forum/view/$question_id"));
+    }
  
+    
+    
 }

@@ -13,8 +13,9 @@
         <br>
         Profil: <?=$user->profile ?>
         <br>
-        
-        <a href='<?=$this->url->create("users/edit/{$user->id}")?>'><span class='edit-link'>Redigera</span></a>
+        <?php if($this->users->verifyLogin($user->id)): ?>
+            <a href='<?=$this->url->create("users/edit/{$user->id}")?>'><span class='edit-link'>Redigera</span></a>
+        <?php endif; ?>
     </div>
     <hr>
     <div class='user-contributions'>

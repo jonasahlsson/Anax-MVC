@@ -155,7 +155,7 @@ class UsersController extends \Anax\Users\UsersController implements \Anax\DI\II
         $this->db->execute([
             'doe',
             'test2@example.com',
-            'John/Jane Doe',
+            'Johnny-Jane Doe',
             password_hash('doe', PASSWORD_DEFAULT),
             'Jag är John/Jane Doe och jag är en användare!',
             $now,
@@ -260,7 +260,7 @@ class UsersController extends \Anax\Users\UsersController implements \Anax\DI\II
         $user = isset($id) ? $this->users->find($id) : null;
         
         // check editing rights
-        if(!($this->users->verifyLoggedInAs($this->users->id))) {
+        if(!($this->users->verifyLogin($this->users->id))) {
             die("Du saknar rättigheter för den här åtgärden.");
         }
         

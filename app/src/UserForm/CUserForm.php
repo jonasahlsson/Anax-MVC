@@ -22,11 +22,11 @@ class CUserForm extends \Mos\HTMLForm\CForm
     {
 
         $this->user = $user;
-        $acronym = isset($user->acronym) ? $user->acronym : null;
-        $name = isset($user->name) ? $user->name : null;
+        $acronym = isset($user->acronym) ? htmlspecialchars($user->acronym) : null;
+        $name = isset($user->name) ? htmlspecialchars($user->name) : null;
         $password = isset($user->password) ? $user->password : null;
         $email = isset($user->email) ? $user->email : null;
-        $profile = isset($user->profile) ? $user->profile : null;
+        $profile = isset($user->profile) ? htmlspecialchars($user->profile) : null;
         $id = is_numeric($user->id) ? $user->id : null;
         $created = isset($user->created) ? $user->created : null;
 

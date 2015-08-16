@@ -25,7 +25,9 @@
                 <?=$question->timestamp ?>
                 </div>
                 <br>
-                <a href='<?=$this->url->create("forum/edit-question/{$question->id}") ?>'><span class="edit-link">Redigera</span></a>
+                <?php if($this->users->verifyLogin($question->id)): ?>
+                    <a href='<?=$this->url->create("forum/edit-question/{$question->id}") ?>'><span class="edit-link">Redigera</span></a>
+                <?php endif; ?>
             </div>    
             
             <?php if (is_array($questionComments)) : ?>
@@ -39,7 +41,9 @@
                                 <?=$this->users->fetchName($comment->user_id); ?>
                             </a>
                             <?=$comment->timestamp ?>
-                            <a href='<?=$this->url->create("forum/edit-comment/{$comment->id}") ?>'><span class="edit-link">Redigera</span></a>
+                            <?php if($this->users->verifyLogin($comment->user_id)): ?>
+                                <a href='<?=$this->url->create("forum/edit-comment/{$comment->id}") ?>'><span class="edit-link">Redigera</span></a>
+                            <?php endif; ?>
                         </div>
                     <?php endforeach; ?>
                     <a href='<?=$this->url->create("forum/comment/{$question->id}") ?>'><span class="edit-link">Kommentera</span></a>
@@ -53,7 +57,16 @@
                 <!--Answers-->
                 <?php foreach ($answers as $answer) :?>
                 <hr>
+
                     <div class='wrap-answer'>
+                        <div class="vote">
+                            <?php if ($question->accepted_answer === $answer->id): ?>
+                                <span title="accepterat svar"><i class="fa fa-check fa-2x"></i></span>
+                            <?php elseif($this->users->verifyLogin($answer->user_id)): ?>
+                                    <a href='<?=$this->url->create("forum/accept-answer/{$answer->question_id}/{$answer->id}") ?>'><span class="accept-link">Acceptera svar</span></a>
+                            <?php endif; ?>   
+                        </div>
+
                         <div class='answer'>
                             <?=$answer->content ?>
                             
@@ -65,7 +78,9 @@
                                 <?=$answer->timestamp ?>
                             </div>
                             <br>
-                            <a href='<?=$this->url->create("forum/edit-answer/{$answer->id}") ?>'><span class="edit-link">Redigera</span></a>
+                            <?php if($this->users->verifyLogin($answer->user_id)): ?>
+                                <a href='<?=$this->url->create("forum/edit-answer/{$answer->id}") ?>'><span class="edit-link">Redigera</span></a>
+                            <?php endif; ?>    
                         </div>
                         <!--Comments on Answer-->
                         <?php if (is_array($answerComments)) : ?>
@@ -80,7 +95,9 @@
                                                 <?=$this->users->fetchName($comment->user_id); ?>
                                             </a>    
                                             <?=$comment->timestamp ?>
-                                            <a href='<?=$this->url->create("forum/edit-comment/{$comment->id}") ?>'><span class="edit-link">Redigera</span></a>
+                                            <?php if($this->users->verifyLogin($comment->user_id)): ?>
+                                                <a href='<?=$this->url->create("forum/edit-comment/{$comment->id}") ?>'><span class="edit-link">Redigera</span></a>
+                                            <?php endif; ?>
                                         </div>    
                                     <?php endif; ?>
                                 <?php endforeach; ?>  

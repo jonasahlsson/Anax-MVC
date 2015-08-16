@@ -125,9 +125,15 @@ class User extends \Anax\Users\User
     /**
      *  Verify that user is logged in as an specific id
      */
-    public function verifyLoggedInAs($user_id = null)
+    public function verifyLogin($user_id = null)
     {
+        
+        // compare user-id with user-id in session
         if (isset($_SESSION['user']['id']) AND ($_SESSION['user']['id'] === $user_id)) {
+            return true;
+        }
+        // if admin account
+        else if (isset($_SESSION['user']['id']) AND ($_SESSION['user']['id'] === '1')) {
             return true;
         }
         else {
