@@ -19,7 +19,6 @@ function dump($array)
 }
 
 
-
 /**
  * Sort array but maintain index when compared items are equal.
  * http://www.php.net/manual/en/function.usort.php#38827

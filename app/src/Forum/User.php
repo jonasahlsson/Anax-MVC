@@ -109,12 +109,15 @@ class User extends \Anax\Users\User
     
     /**
      *  Verify that user is logged in.
+     *
+     * @int or false
      */
     public function isLoggedIn()
     {
         // check session for user id
-        if(!isset($_SESSION['user']['id'])) {
-            return true;
+        if(isset($_SESSION['user']['id'])) {
+            // return true;
+            return $_SESSION['user']['id'];
         }
         else {
             return false;

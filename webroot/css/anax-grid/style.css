@@ -936,6 +936,9 @@ li.question-thumb {
 .comment:after {
   clear: both;
 }
+.vote a {
+  color: #888;
+}
 .edit-link,
 .accept-link {
   font-size: smaller;

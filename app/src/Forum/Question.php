@@ -61,29 +61,4 @@ class Question extends \Anax\MVC\CDatabaseModel
         return $this->db->executeFetchAll($sql, $params);
     }
     
-    
-    // /**
-     // *  Find questions with tags
-     // *  
-     // *  @return array 
-     // */
-    // public function findQuestionsWithTags($q_id = null)
-    // {
-    // // find questions with tags. No q_id returns all questions.
-    
-    // $where = $q_id !== null ? " = ?" : " IS NOT null" ;
-    // $params = $q_id !== null ? [$q_id] : [];
-    
-        // $sql = "SELECT t.tag_text, t2q.question_id, q.title, q.content, q.user_id, q.timestamp, t2q.tag_id 
-            // FROM tag as t
-            // LEFT OUTER JOIN tag2question AS t2q
-            // ON t2q.tag_id = t.id
-            // LEFT OUTER JOIN question as q
-            // ON t2q.question_id = q.id
-            // WHERE t2q.question_id $where
-            // ORDER BY q.id DESC; "; 
-        
-        
-        // return $this->db->executeFetchAll($sql, $params);
-    // }
 }

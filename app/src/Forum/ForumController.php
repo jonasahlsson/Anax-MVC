@@ -10,6 +10,7 @@ class ForumController implements \Anax\DI\IInjectionAware
     protected $question;
     protected $answer;
     protected $comment;
+    protected $vote;
     
     /**
      * Initialize the controller.
@@ -33,6 +34,10 @@ class ForumController implements \Anax\DI\IInjectionAware
         // load tag model
         $this->tag = new \Joah\Forum\Tag();
         $this->tag->setDI($this->di);
+        
+        // load vote model
+        $this->vote = new \Joah\Forum\Vote();
+        $this->vote->setDI($this->di);
 
         // // activate session
         // $this->di->session(); // Will load the session service which also starts the session
@@ -116,26 +121,31 @@ class ForumController implements \Anax\DI\IInjectionAware
                 'question_id' => ['integer'],
             ]
         )->execute();
+        
+        
+        // remove and create new vote table
+        $this->db->dropTableIfExists('vote')->execute();
+     
+        $this->db->createTable(
+            'vote',
+            [
+                'id' => ['integer', 'primary key', 'not null', 'auto_increment'],
+                'vote_type' => ['integer'],
+                'vote_on' => ['integer'],
+                'user_id' => ['integer'],
+                'points' => ['integer'],
+            ]
+        )->execute();
+        
 
     }
     
     
-    public function testAction($id = null) 
+    public function testAction($vote_type, $vote_on, $user_id, $points) 
     {
         // test route
-        // echo "Nedan följer en dump av session['user']<br>";
-        echo "Nedan följer en dump av session<br>";
-        
-        // dump($this->session->get('user'));
-        dump($_SESSION);
-        // dump($this->di);
-        
-        $content = $this->di->fileContent->get('forum/README_new.md');
-        $content = $this->di->textFilter->doFilter($content, 'shortcode, markdown');
+        $this->vote->vote(['vote_type' => $vote_type, 'vote_on' => $vote_on, 'user_id' => $user_id, 'points' => $points]); 
     
-    $this->di->views->add('forum/content', [
-        'content' => $content,
-    ]);
     }
     
     /**
@@ -279,6 +289,7 @@ När jag dricker *läsk på burk* så får jag ofta problem med att jag inte kan
         $this->db->execute([
             'läsk'
         ]);
+        
         // test data tags2question 
         $this->db->insert(
             'tag2question',
@@ -313,6 +324,47 @@ När jag dricker *läsk på burk* så får jag ofta problem med att jag inte kan
         $this->db->execute([
             2,
             3
+        ]);
+    
+        
+        // test data vote 
+        $this->db->insert(
+            'vote',
+            ['vote_type', 'vote_on', 'user_id', 'points']
+        );
+        $this->db->execute([
+            1,
+            1,
+            3,
+            1
+        ]);
+        
+        $this->db->execute([
+            1,
+            3,
+            1,
+            -1
+        ]);
+        
+        $this->db->execute([
+            1,
+            3,
+            3,
+            -1
+        ]);        
+
+        $this->db->execute([
+            1,
+            2,
+            1,
+            1
+        ]);
+        
+        $this->db->execute([
+            1,
+            2,
+            3,
+            -1
         ]);
     }
     
@@ -371,14 +423,17 @@ När jag dricker *läsk på burk* så får jag ofta problem med att jag inte kan
             $comment->content = $this->textFilter->doFilter($comment->content, 'markdown');
             $comment->content = $this->HTMLPurifier->purify($comment->content);
         }
-
+        
+        
+        $vote = $this->vote;
         
         $this->views->add('forum/view-question', [
             'question' => $question,
             'tags' => $tags,
             'questionComments' => $questionComments,
             'answers' => $answers,
-            'answerComments' => $answerComments
+            'answerComments' => $answerComments,
+            'vote' => $vote
         ]);
         
         // $this->views->addString('Lite text i en sidebar. Eventuellt lägga en knapp för att skapa en egen fråga här?', 'sidebar');
@@ -438,7 +493,7 @@ När jag dricker *läsk på burk* så får jag ofta problem med att jag inte kan
     public function newQuestionAction()
     {
         // check if logged in.
-        if($this->users->isLoggedIn()) {
+        if(!$this->users->isLoggedIn()) {
         // redirect to login page and return after successfull login
             $this->redirectTo($this->url->create("users/login") . "?url=" . $this->request->getRoute());
             die("Funktionen kräver inloggning");
@@ -584,7 +639,7 @@ När jag dricker *läsk på burk* så får jag ofta problem med att jag inte kan
     {
 
         // check if logged in.
-        if($this->users->isLoggedIn()) {
+        if(!$this->users->isLoggedIn()) {
         // redirect to login page and return after successfull login
             $this->redirectTo($this->url->create("users/login") . "?url=" . $this->request->getRoute());
             
@@ -775,7 +830,7 @@ När jag dricker *läsk på burk* så får jag ofta problem med att jag inte kan
     {
         
         // check if logged in.
-        if($this->users->isLoggedIn()) {
+        if(!$this->users->isLoggedIn()) {
             // redirect to login page and return after successfull login
             $this->redirectTo($this->url->create("users/login") . "?url=" . $this->request->getRoute());
             die("Funktionen kräver inloggning");
@@ -944,7 +999,7 @@ När jag dricker *läsk på burk* så får jag ofta problem med att jag inte kan
     public function commentAction($question_id = null, $answer_id = null)
     {
         // check if logged in.
-        if($this->users->isLoggedIn()) {
+        if(!$this->users->isLoggedIn()) {
             // redirect to login page and return after successfull login
             $this->redirectTo($this->url->create("users/login") . "?url=" . $this->request->getRoute());
             die("Funktionen kräver inloggning");
@@ -966,8 +1021,7 @@ När jag dricker *läsk på burk* så får jag ofta problem med att jag inte kan
             die("question_id and answer_id doesn't match");
         }
         
-        
-        
+        // the form
         $form = $this->di->form->create([], [
             'question_id' => [
                 'type' => 'hidden',
@@ -1221,7 +1275,7 @@ När jag dricker *läsk på burk* så får jag ofta problem med att jag inte kan
         }                
         
         // check if logged in.
-        if($this->users->isLoggedIn()) {
+        if(!$this->users->isLoggedIn()) {
         // redirect to login page and return after successfull login
             $this->redirectTo($this->url->create("users/login") . "?url=" . $this->request->getRoute());
         }
@@ -1239,6 +1293,20 @@ När jag dricker *läsk på burk* så får jag ofta problem med att jag inte kan
         $this->redirectTo($this->url->create("forum/view/$question_id"));
     }
  
-    
+    /*
+     * Vote
+     *
+     * @return void
+     */
+ 
+    public function voteAction($vote_type, $vote_on, $user_id, $points) 
+    {
+        // call on vote method in vote model
+        $this->vote->vote(['vote_type' => $vote_type, 'vote_on' => $vote_on, 'user_id' => $user_id, 'points' => $points]); 
+        
+        // redirect to url in querystring or to default forum
+        $this->redirectTo($this->di->request->getGet('url', 'forum'));
+
+    }
     
 }
