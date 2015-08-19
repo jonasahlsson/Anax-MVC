@@ -970,7 +970,7 @@ När jag dricker *läsk på burk* så får jag ofta problem med att jag inte kan
         // if form was submitted
         if ($status === true) {
             //$form->AddOUtput("<p><i>Sparat!</i></p>");
-            $this->redirectTo("forum/view/{$this->answer->question_id}");
+            $this->redirectTo("forum/view/{$this->answer->question_id}/#answer-{$this->answer->id}");
         } 
         // If form could not be submitted.
         else if ($status === false) {
@@ -1159,7 +1159,7 @@ När jag dricker *läsk på burk* så får jag ofta problem med att jag inte kan
         // if form was submitted
         if ($status === true) {
             //$form->AddOUtput("<p><i>Sparat!</i></p>");
-            $this->redirectTo("forum/view/{$this->comment->question_id}");
+            $this->redirectTo("forum/view/{$this->comment->question_id}/#comment-{$this->comment->id}");
         } 
         // If form could not be submitted.
         else if ($status === false) {

@@ -44,7 +44,7 @@
                 <ul class="fa-ul">
                     <?php foreach($answers as $answer): ?>
                     <li>
-                        <a href='<?=$this->url->create("forum/view/{$answer->question_id}") ?>'>
+                        <a href='<?=$this->url->create("forum/view/{$answer->question_id}/#answer-{$answer->id}") ?>'>
                             <i class="fa-li fa fa-exclamation"></i> <?= trim_text($answer->content, 149); ?>
                         </a>    
                     </li>
@@ -60,7 +60,7 @@
                 <ul class="fa-ul">
                     <?php foreach($comments as $comment): ?>
                     <li>
-                        <a href='<?=$this->url->create("forum/view/{$comment->question_id}") ?>'>
+                        <a href='<?=$this->url->create("forum/view/{$comment->question_id}/#comment-{$comment->id}") ?>'>
                             <i class="fa-li fa fa-commenting"></i> <?= trim_text($comment->content, 149); ?>
                         </a>
                     </li>    
