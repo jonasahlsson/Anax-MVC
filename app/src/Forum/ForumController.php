@@ -181,8 +181,7 @@ class ForumController implements \Anax\DI\IInjectionAware
 
         $this->db->execute([
             'Hur får man ur det sista ur burken?',
-            '###Jag gillar läsk### 
-När jag dricker *läsk på burk* så får jag ofta problem med att jag inte kan få ur det sista ur burken. Jag brukar kasta fram och tillbaka med huvudet. Headbangarn lite som en hårdrockar, för att få ut det sista. Men är det en varm dag så hinner läsken torka fast innan jag har fått ut sista droppen! Vad ska jag göra för att få ut det sista ur burken?',
+            'När jag dricker *läsk på burk* så får jag ofta problem med att jag inte kan få ur det sista ur burken. Jag brukar kasta fram och tillbaka med huvudet. Headbangarn lite som en hårdrockar, för att få ut det sista. Men är det en varm dag så hinner läsken torka fast innan jag har fått ut sista droppen! Vad ska jag göra för att få ut det sista ur burken?',
             2,
             $now
         ]);
@@ -371,8 +370,10 @@ När jag dricker *läsk på burk* så får jag ofta problem med att jag inte kan
     /**
      *  view a question with answers and comments.
      */
-    public function viewAction($id)
+    public function viewAction($id, $sortAnswersBy = null)
     {
+        // set sort order for answers
+        $sortAnswersBy = (isset($sortAnswersBy) AND $sortAnswersBy === "date" )? "date" : "rank";
         
         // check id is valid
         if(!is_numeric($id)) {
@@ -396,7 +397,9 @@ När jag dricker *läsk på burk* så får jag ofta problem med att jag inte kan
         $questionComments = $this->comment->findQuestionComments($id);
         
         // multiple answers as array of objects
-        $answers = $this->answer->findAnswers($id);
+        $answers = $this->answer->findAnswers($id, $sortAnswersBy);
+        
+        // dump($answers);
         
         // comments belonging to answers as array of object
         $answerComments = $this->comment->findAnswerComments($id);
@@ -463,6 +466,10 @@ När jag dricker *läsk på burk* så får jag ofta problem med att jag inte kan
         
         // fetch tags, run markdown filter
         foreach($all as $question) {
+
+            // fetch answer count
+            $answer_count = $this->answer->countAnswersByQuestion($question->id);
+            $question->answerCount = $answer_count[0];
             
             // fetch array of objects with tag info
             $question->tags = $this->tag->findTagByQuestion($question->id);
@@ -472,11 +479,14 @@ När jag dricker *läsk på burk* så får jag ofta problem med att jag inte kan
             $question->content = $this->HTMLPurifier->purify($question->content);
         }
     
+        // pass on vote model
+        $vote = $this->vote;
     
         $this->theme->setTitle('Översikt frågor');
         $this->views->add('forum/overview-question', [
             'title' => "Översikt frågor",
             'questions' => $all,
+            'vote' => $vote,
         ]);
         
         $this->views->addString("<a href='" . $this->url->create('forum/new-question') . "'>STÄLL DIN FRÅGA!</a>");

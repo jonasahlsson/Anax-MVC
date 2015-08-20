@@ -12,13 +12,19 @@ class Answer extends \Anax\MVC\CDatabaseModel
      *
      * @return array
      */
-    public function findAnswers($question_id)
+    public function findAnswers($question_id, $sortAnswersBy = null)
     {
+        
+       // set sort order for answers
+        $sortAnswersBy = (isset($sortAnswersBy) AND $sortAnswersBy === "date" )? "id DESC" : "content";
+        
+        // $this->db->setVerbose();
         $this->db->select()
                 ->from($this->getSource())
-                ->where('question_id = ?');
+                ->where('question_id = ?')
+                ->orderby('?');
                 
-        $this->db->execute([$question_id]);
+        $this->db->execute([$question_id, $sortAnswersBy]);
         $this->db->setFetchModeClass(__CLASS__);
         return $this->db->fetchAll();
     }
@@ -59,5 +65,21 @@ class Answer extends \Anax\MVC\CDatabaseModel
         return $this->db->executeFetchAll($sql, $params);
     }
     
-    
+    /**
+     * Count answers by question
+     *
+     * @return array
+     */
+    public function countAnswersByQuestion($question_id)
+    {
+        // $this->db->setVerbose();
+        
+        $sql = "SELECT question_id, count(question_id) AS count_answer
+                FROM {$this->getSource()}
+                WHERE question_id = ? ;";
+        
+        $params = [$question_id];
+        
+        return $this->db->executeFetchAll($sql, $params);
+    }
 }

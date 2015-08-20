@@ -4,6 +4,12 @@
     <ul>
         <?php foreach ($questions as $question) :?>
             <li class='question-thumb'>
+                <div class='vote'>
+                    <?= $vote->showVoteSum(1, $question->id) ?>
+                    Röster
+                    <?= $question->answerCount->count_answer ?>
+                    Svar
+                </div>
                 <div class = 'question-thumb-title'>
                     <a href='<?=$this->url->create("forum/view/{$question->id}") ?>'> <h3><?=$question->title ?> </h3> </a>
                     <a href='<?=$this->url->create("forum/view/{$question->id}") ?>'><?=trim_text($question->content, 149) ?></a>
