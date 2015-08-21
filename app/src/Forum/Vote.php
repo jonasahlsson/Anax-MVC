@@ -24,6 +24,9 @@ class Vote extends \Anax\MVC\CDatabaseModel
         
         $res = $this->db->executeFetchAll($sql, $params);
         
+        // set empty to 0
+        $res[0]->vote_sum = empty($res[0]->vote_sum) ? 0 :$res[0]->vote_sum;
+        
         return $res[0]->vote_sum;
     }
 
@@ -38,7 +41,7 @@ class Vote extends \Anax\MVC\CDatabaseModel
     */
     public function vote($values)
     {
-
+    
         // fetch pervious vote if any
         $this->fetchVote($values);
         

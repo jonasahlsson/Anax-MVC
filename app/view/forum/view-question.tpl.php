@@ -6,9 +6,9 @@
         <div class='wrap-question'>
             <!--Question-->
             <div class='vote'>
-                <a href='<?=$this->url->create("forum/vote/1/{$question->id}/{$this->users->isLoggedIn()}/1") . "?url=" . $this->request->getRoute() ?>' title='rösta +1'><i class="fa fa-arrow-up"></i></a>
+                <a href='<?=$this->url->create("forum/vote/1/{$question->id}/{$this->users->isLoggedIn()}/1") . "?url=" . $this->request->getRoute() ?>' title='rösta +1'><i class="fa fa-thumbs-o-up"></i></a>
                 <?= $vote->showVoteSum(1, $question->id) ?>
-                <a href='<?=$this->url->create("forum/vote/1/{$question->id}/{$this->users->isLoggedIn()}/-1") . "?url=" . $this->request->getRoute() ?>' title='rösta -1'><i class="fa fa-arrow-down"></i></a>
+                <a href='<?=$this->url->create("forum/vote/1/{$question->id}/{$this->users->isLoggedIn()}/-1") . "?url=" . $this->request->getRoute() ?>' title='rösta -1'><i class="fa fa-thumbs-o-down"></i></a>
             </div>    
             <div class='question'>
                 <?=$question->content ?>
@@ -52,9 +52,9 @@
                             <?php endif; ?>
                             
                             <span class="vote">
-                                <a href='<?=$this->url->create("forum/vote/3/{$comment->id}/{$this->users->isLoggedIn()}/1") . "?url=" . $this->request->getRoute() . "#comment-" . $comment->id ?>' title='rösta +1'><i class="fa fa-arrow-up"></i></a>
+                                <a href='<?=$this->url->create("forum/vote/3/{$comment->id}/{$this->users->isLoggedIn()}/1") . "?url=" . $this->request->getRoute() . "#comment-" . $comment->id ?>' title='rösta +1'><i class="fa fa-thumbs-o-up"></i></a>
                                 <?= $vote->showVoteSum(3, $comment->id) ?>
-                                <a href='<?=$this->url->create("forum/vote/3/{$comment->id}/{$this->users->isLoggedIn()}/-1") . "?url=" . $this->request->getRoute() . "#comment-" . $comment->id ?>' title='rösta -1'><i class="fa fa-arrow-down"></i></a>
+                                <a href='<?=$this->url->create("forum/vote/3/{$comment->id}/{$this->users->isLoggedIn()}/-1") . "?url=" . $this->request->getRoute() . "#comment-" . $comment->id ?>' title='rösta -1'><i class="fa fa-thumbs-o-down"></i></a>
                             </span>
 
                             
@@ -69,19 +69,21 @@
         <?php if (is_array($answers)) : ?>
             <div class='answers'>
                 <!--Answers-->
-                <?php foreach ($answers as $answer) :?>
+                <?= count($answers) ?> svar | <i class="fa fa-sort"></i> <a href='<?=$this->url->create("forum/view/{$question->id}") ?>'><span class="sort-order">ranking</span></a> <a href='<?=$this->url->create("forum/view/{$question->id}/date") ?>'><span class="sort-order">datum</span></a>
                 <hr>
-                    <div class='wrap-answer' id='answer-<?= $answer->id ?>'>
+                <?php foreach ($answers as $answer) :?>
+                
+                    <div class='wrap-answer' id='answer-<?= $answer->answer_id ?>'>
                         <div class="vote">
-                            <?php if ($question->accepted_answer === $answer->id): ?>
+                            <?php if ($question->accepted_answer === $answer->answer_id): ?>
                                 <span title="accepterat svar"><i class="fa fa-check fa-2x"></i></span>
-                            <?php elseif($this->users->verifyLogin($answer->user_id)): ?>
-                                    <a href='<?=$this->url->create("forum/accept-answer/{$answer->question_id}/{$answer->id}") ?>'><span class="accept-link">Acceptera svar</span></a>
+                            <?php elseif($this->users->verifyLogin($question->user_id)): ?>
+                                    <a href='<?=$this->url->create("forum/accept-answer/{$answer->question_id}/{$answer->answer_id}") ?>'><span class="accept-link">Acceptera svar</span></a>
                             <?php endif; ?>
                             
-                            <a href='<?=$this->url->create("forum/vote/2/{$answer->id}/{$this->users->isLoggedIn()}/1") . "?url=" . $this->request->getRoute() . "#answer-" . $answer->id ?>' title='rösta +1'><i class="fa fa-arrow-up"></i></a>
-                            <?= $vote->showVoteSum(2, $answer->id) ?>
-                            <a href='<?=$this->url->create("forum/vote/2/{$answer->id}/{$this->users->isLoggedIn()}/-1") . "?url=" . $this->request->getRoute() . "#answer-" . $answer->id ?>' title='rösta -1'><i class="fa fa-arrow-down"></i></a>
+                            <a href='<?=$this->url->create("forum/vote/2/{$answer->answer_id}/{$this->users->isLoggedIn()}/1") . "?url=" . $this->request->getRoute() . "#answer-" . $answer->answer_id ?>' title='rösta +1'><i class="fa fa-thumbs-o-up"></i></a>
+                            <?= $vote->showVoteSum(2, $answer->answer_id) ?>
+                            <a href='<?=$this->url->create("forum/vote/2/{$answer->answer_id}/{$this->users->isLoggedIn()}/-1") . "?url=" . $this->request->getRoute() . "#answer-" . $answer->answer_id ?>' title='rösta -1'><i class="fa fa-thumbs-o-down"></i></a>
                         </div>
 
                         <div class='answer'>
@@ -96,7 +98,7 @@
                             </div>
                             <br>
                             <?php if($this->users->verifyLogin($answer->user_id)): ?>
-                                <a href='<?=$this->url->create("forum/edit-answer/{$answer->id}") ?>'><span class="edit-link">Redigera</span></a>
+                                <a href='<?=$this->url->create("forum/edit-answer/{$answer->answer_id}") ?>'><span class="edit-link">Redigera</span></a>
                             <?php endif; ?>    
                         </div>
                         <!--Comments on Answer-->
@@ -104,7 +106,7 @@
                             <div class='comments'>
                                 <?php foreach ($answerComments as $comment) :?>
                                 
-                                    <?php if ($comment->answer_id == $answer->id): ?>
+                                    <?php if ($comment->answer_id == $answer->answer_id): ?>
                                         <div class='comment' id='comment-<?= $comment->id ?>'>
                                             <?=$comment->content ?>
                                             - 
@@ -114,9 +116,9 @@
                                             <?=$comment->timestamp ?>
                                             
                                             <span class="vote">
-                                                <a href='<?=$this->url->create("forum/vote/3/{$comment->id}/{$this->users->isLoggedIn()}/1") . "?url=" . $this->request->getRoute() . "#comment-" . $comment->id ?>' title='rösta +1'><i class="fa fa-arrow-up"></i></a>
+                                                <a href='<?=$this->url->create("forum/vote/3/{$comment->id}/{$this->users->isLoggedIn()}/1") . "?url=" . $this->request->getRoute() . "#comment-" . $comment->id ?>' title='rösta +1'><i class="fa fa-thumbs-o-up"></i></a>
                                                 <?= $vote->showVoteSum(3, $comment->id) ?>
-                                                <a href='<?=$this->url->create("forum/vote/3/{$comment->id}/{$this->users->isLoggedIn()}/-1") . "?url=" . $this->request->getRoute() . "#comment-" . $comment->id ?>' title='rösta -1'><i class="fa fa-arrow-down"></i></a>
+                                                <a href='<?=$this->url->create("forum/vote/3/{$comment->id}/{$this->users->isLoggedIn()}/-1") . "?url=" . $this->request->getRoute() . "#comment-" . $comment->id ?>' title='rösta -1'><i class="fa fa-thumbs-o-down"></i></a>
                                             </span>
 
                                             
@@ -126,10 +128,11 @@
                                         </div>    
                                     <?php endif; ?>
                                 <?php endforeach; ?>  
-                            <a href='<?=$this->url->create("forum/comment/{$answer->question_id}/{$answer->id}") ?>'><span class="edit-link">Kommentera</span></a>
+                            <a href='<?=$this->url->create("forum/comment/{$answer->question_id}/{$answer->answer_id}") ?>'><span class="edit-link">Kommentera</span></a>
                             </div>
                         <?php endif; ?>
-                    </div>    
+                    </div>
+                <hr>
                 <?php endforeach; ?>    
             </div>
             <a href='<?=$this->url->create("forum/answer/{$question->id}") ?>'>BESVARA FRÅGAN</a>

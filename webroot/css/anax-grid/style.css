@@ -880,8 +880,10 @@ li.question-thumb {
   margin-bottom: 1em;
   overflow: auto;
 }
-.wrap-answer {
+.answers {
   margin-top: 8em;
+}
+.wrap-answer {
   margin-bottom: 3em;
 }
 .question,

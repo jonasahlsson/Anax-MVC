@@ -16,18 +16,46 @@ class Answer extends \Anax\MVC\CDatabaseModel
     {
         
        // set sort order for answers
-        $sortAnswersBy = (isset($sortAnswersBy) AND $sortAnswersBy === "date" )? "id DESC" : "content";
+        $sortAnswersBy = (isset($sortAnswersBy) AND $sortAnswersBy === "date" )? "timestamp ASC" : "points DESC";
         
         // $this->db->setVerbose();
         $this->db->select()
                 ->from($this->getSource())
                 ->where('question_id = ?')
-                ->orderby('?');
+                ->join('vote', 'answer.id = vote.vote_on AND ( vote.vote_type = 2 OR vote_type IS NULL)', 'LEFT OUTER')
+                ->orderBy($sortAnswersBy);
                 
-        $this->db->execute([$question_id, $sortAnswersBy]);
+        $this->db->execute([$question_id]);
         $this->db->setFetchModeClass(__CLASS__);
         return $this->db->fetchAll();
     }
+    
+    /**
+     * Find and return answers belonging to question_id.
+     *
+     * @return array
+     */
+    public function findAnswersWithVotes($question_id, $sortAnswersBy = null)
+    {
+        
+       // set sort order for answers
+        $sortAnswersBy = (isset($sortAnswersBy) AND $sortAnswersBy === "date" )? "timestamp ASC" : "sum_points DESC";
+        
+        
+            $sql = "SELECT *, answer.id AS answer_id, answer.user_id AS user_id, sum(vote.points) AS sum_points FROM answer
+                    LEFT OUTER JOIN vote ON answer.id = vote.vote_on AND (vote_type = 2 OR vote_type IS NULL)
+                    WHERE question_id = ?
+                    GROUP BY answer.id
+                    ORDER BY $sortAnswersBy";
+        
+        $params = [$question_id];
+        
+        $res = $this->db->executeFetchAll($sql, $params);
+
+        return $res;
+    }
+
+    
     
     /**
      * Find and return answers by user

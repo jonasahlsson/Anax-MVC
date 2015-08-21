@@ -381,7 +381,6 @@ class ForumController implements \Anax\DI\IInjectionAware
         }
         
         $this->theme->setTitle("Fråga");
-        // $this->views->addString('Här kollar vi på en fråga');
         
         // a question, as an object
         $question = $this->question->find($id);
@@ -396,10 +395,8 @@ class ForumController implements \Anax\DI\IInjectionAware
         // comments belonging to question as array of object
         $questionComments = $this->comment->findQuestionComments($id);
         
-        // multiple answers as array of objects
-        $answers = $this->answer->findAnswers($id, $sortAnswersBy);
-        
-        // dump($answers);
+        // multiple answers with votes and variable sort order, as array of objects
+        $answers = $this->answer->findAnswersWithVotes($id, $sortAnswersBy);
         
         // comments belonging to answers as array of object
         $answerComments = $this->comment->findAnswerComments($id);
@@ -439,8 +436,6 @@ class ForumController implements \Anax\DI\IInjectionAware
             'vote' => $vote
         ]);
         
-        // $this->views->addString('Lite text i en sidebar. Eventuellt lägga en knapp för att skapa en egen fråga här?', 'sidebar');
-
     }
     
     
@@ -769,7 +764,6 @@ class ForumController implements \Anax\DI\IInjectionAware
         $this->views->add('forum/overview-tag', [
             'title' => "Översikt taggar",
             'tags' => $tags,
-            
         ]);
     
     }
@@ -784,7 +778,11 @@ class ForumController implements \Anax\DI\IInjectionAware
 
         // fetch tags for each question and run markdown filter
         foreach($questions as $question) {
-        
+                    
+            // fetch answer count
+            $answer_count = $this->answer->countAnswersByQuestion($question->id);
+            $question->answerCount = $answer_count[0];
+            
             // fetch array of objects with tag info
             $question->tags = $this->tag->findTagByQuestion($question->id);
         
@@ -792,11 +790,14 @@ class ForumController implements \Anax\DI\IInjectionAware
             $question->content = $this->HTMLPurifier->purify($question->content);
         };
         
+        // pass on vote model
+        $vote = $this->vote;
         
         // $this->views->add('forum/view-question-by-tag', [
         $this->views->add('forum/overview-question', [
             'title' => "Frågor med tagg #{$this->tag->find($tag_id)->tag_text}",
-            'questions' => $questions
+            'questions' => $questions,
+            'vote' => $vote,
         ]);
         
         // $this->views->addString('Lite text i en sidebar. Här kanske jag kan lägga in en lista på populära taggar?', 'sidebar');
@@ -1311,6 +1312,14 @@ class ForumController implements \Anax\DI\IInjectionAware
  
     public function voteAction($vote_type, $vote_on, $user_id, $points) 
     {
+        
+        // check if logged in.
+        if(!$this->users->isLoggedIn()) {
+            // redirect to login page and return after successfull login
+            // $this->redirectTo($this->url->create("users/login") . "?url=" . $this->request->getRoute());
+            die("Funktionen kräver inloggning");
+        }
+        
         // call on vote method in vote model
         $this->vote->vote(['vote_type' => $vote_type, 'vote_on' => $vote_on, 'user_id' => $user_id, 'points' => $points]); 
         
