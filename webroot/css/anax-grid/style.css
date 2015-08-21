@@ -849,6 +849,9 @@ figure.rounded img {
   -moz-border-radius: 50px;
   border-radius: 50px;
 }
+a {
+  color: inherit;
+}
 li.top-users {
   display: inline-block;
   vertical-align: top;
@@ -874,7 +877,7 @@ li.user-thumb {
 }
 li.question-thumb {
   border-bottom: 1px dotted;
-  color: #888;
+  color: #333;
   padding-top: 1em;
   padding-bottom: 1em;
   margin-bottom: 1em;
