@@ -141,11 +141,12 @@ class ForumController implements \Anax\DI\IInjectionAware
     }
     
     
-    public function testAction($vote_type, $vote_on, $user_id, $points) 
+    public function testAction($user_id) 
     {
         // test route
-        $this->vote->vote(['vote_type' => $vote_type, 'vote_on' => $vote_on, 'user_id' => $user_id, 'points' => $points]); 
-    
+        // $this->vote->fetchVotesByUser($user_id);
+        // $this->vote->countPosNegVotesByUser($user_id);
+        $this->userScore($user_id);
     }
     
     /**
@@ -435,7 +436,6 @@ class ForumController implements \Anax\DI\IInjectionAware
             'answerComments' => $answerComments,
             'vote' => $vote
         ]);
-        
     }
     
     
@@ -815,6 +815,7 @@ class ForumController implements \Anax\DI\IInjectionAware
         $questions = $this->question->findQuestionByUser($user_id);
         $answers = $this->answer->findAnswerByUser($user_id);
         $comments = $this->comment->findCommentByUser($user_id);
+        $voteCount = $this->vote->countPosNegVotesByUser($user_id);
         
         // makdown and HTMLPurifier filter
         foreach($answers as $answer) {
@@ -826,8 +827,7 @@ class ForumController implements \Anax\DI\IInjectionAware
             $comment->content = $this->HTMLPurifier->purify($comment->content);
         }
         
-        
-        return ['questions' => $questions, 'answers' => $answers, 'comments' => $comments];
+        return ['questions' => $questions, 'answers' => $answers, 'comments' => $comments, 'voteCount' => $voteCount ];
         
     }
     
@@ -1326,6 +1326,94 @@ class ForumController implements \Anax\DI\IInjectionAware
         // redirect to url in querystring or to default forum
         $this->redirectTo($this->di->request->getGet('url', 'forum'));
 
+    }
+    
+    /*
+     * Calculate a users ranking score
+     *
+     * @return int user score
+     */
+    public function userScore($user_id) 
+    {
+        // scoring activities
+        $ASK_QUESTION = 5;
+        $QUESTION_POS_VOTE = 5;
+        $QUESTION_NEG_VOTE = -2;
+        $ANSWER = 5;
+        $ANSWER_POS_VOTE = 10;
+        $ANSWER_NEG_VOTE = -2;
+        $COMMENT = 1;
+        $COMMENT_POS_VOTE = 2;
+        $COMMENT_NEG_VOTE = -1;
+        
+        // init a score counter
+        $score = 0;
+
+        // run init manualy since it's not an Action suffix on this  method
+        $this->initialize();
+        
+        // question scores
+        $questions = $this->question->findQuestionByUser($user_id);
+        foreach($questions AS $question) {
+            // each question asked scores
+            $score += $ASK_QUESTION;
+            
+            // fetch votes on question
+            $questionVotes = $this->vote->fetchVotesOn(1, $question->id);
+            foreach ($questionVotes AS $questionVote){
+                // positive vote score
+                if($questionVote->points == 1) {
+                    $score += $QUESTION_POS_VOTE;
+                }
+                // negative vote lowers score
+                else if ($questionVote->points == -1 ) {
+                    $score += $QUESTION_NEG_VOTE;
+                }
+            }    
+        } 
+        
+        // answer scores
+        $answers = $this->answer->findAnswerByUser($user_id);
+        foreach($answers as $answer) {
+            // each answer scores
+            $score += $ANSWER;
+            
+            // fetch votes on answers
+            $answerVotes = $this->vote->fetchVotesOn(2, $answer->id);
+            foreach ($answerVotes AS $answerVote) {
+                // positive vote score
+                if($answerVote->points == 1) {
+                    $score += $ANSWER_POS_VOTE;
+                }
+                // negative vote lower score
+                else if ($answerVote->points == -1) {
+                    $score += $ANSWER_NEG_VOTE;
+                }
+            }
+        }
+        
+        // comment scores
+        $comments = $this->comment->findCommentByUser($user_id);
+        foreach($comments as $comment) {
+            // each comment scores
+            $score += $COMMENT;
+            
+            // fetch votes on comments
+            $commentVotes = $this->vote->fetchVotesOn(3, $comment->id);
+            foreach ($commentVotes AS $commentVote) {
+                // positive vote score
+                if($commentVote->points == 1) {
+                    $score += $COMMENT_POS_VOTE;
+                }
+                // negative vote lower score
+                else if ($commentVote->points == -1) {
+                    $score += $COMMENT_NEG_VOTE;
+                }
+            }
+        }
+        
+    return $score;
+    
     }
     
 }

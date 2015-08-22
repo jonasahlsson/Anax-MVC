@@ -57,13 +57,11 @@ class Vote extends \Anax\MVC\CDatabaseModel
         } else {
             return $this->create($values);
         }
-
-        
     }
 
     
     /*
-    *  Vote
+    *  fetch vote 
     *   
     * $param array $values, with keys vote_type, vote_on and user_id. Example ['vote_type' => 1, 'vote_on' => 1, 'user_id' => 1]
     *
@@ -71,7 +69,6 @@ class Vote extends \Anax\MVC\CDatabaseModel
     */
     public function fetchVote($values)
     {
-        // $this->db->setVerbose();
         // fetch vote
         $sql = "SELECT *
                 FROM {$this->getSource()}
@@ -82,6 +79,69 @@ class Vote extends \Anax\MVC\CDatabaseModel
         // $res = $this->db->executeFetchAll($sql, $params);
         $this->db->execute($sql, $params);
         $this->db->fetchInto($this);
+    }
+    
+    /*
+    *  Fetch votes by user
+    *   
+    * $param int user_id
+    *
+    * @return array
+    */
+    public function fetchVotesByUser($user_id)
+    {
+        // count votes
+        $sql = "SELECT count(user_id) AS vote_count
+                FROM {$this->getSource()}
+                WHERE user_id = ?";
+                
+        $params = [$user_id];
+        
+        $res = $this->db->executeFetchAll($sql, $params);
+        return $res;
+    }
+    
+    
+    /*
+    *  Fetch votes by user
+    *   
+    * $param int user_id
+    *
+    * @return array
+    */
+    public function countPosNegVotesByUser($user_id)
+    {
+        // count positive and negative votes separately
+        $sql = "SELECT sum(CASE WHEN points = 1 THEN 1 ELSE 0 END) AS pos_votes,
+                sum(CASE WHEN points = -1 THEN 1 ELSE 0 END) AS neg_votes,
+                sum(points) AS sum
+                FROM vote
+                WHERE user_id = ?";
+                
+        $params = [$user_id];
+        
+        $res = $this->db->executeFetchAll($sql, $params);
+        return $res;
+    }
+    
+    /*
+    *  Fetch votes on question/answer/comment
+    *   
+    * $params int vote_type, int vote_on 
+    *
+    * @return array int
+    */
+    public function fetchVotesOn($vote_type, $vote_on)
+    {
+        // count votes
+        $sql = "SELECT points
+                FROM {$this->getSource()}
+                WHERE vote_type = ? AND vote_on = ?";
+                
+        $params = [$vote_type, $vote_on];
+        
+        $res = $this->db->executeFetchAll($sql, $params);
+        return $res;
     }
     
 }

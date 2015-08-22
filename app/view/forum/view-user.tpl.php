@@ -19,9 +19,11 @@
     </div>
     <hr>
     <div class='user-contributions'>
-        <?php if (!empty($questions) OR !empty($answers) OR !empty($comments)): ?>
-            <h2>Forumaktivitet</h2>
-        <?php endif; ?>
+        <h2>Forumaktivitet</h2>
+        <div class='user-score'>
+            <i class="fa fa-trophy"></i> <?=$this->ForumController->userScore($user->id) ?> Rankingpoäng
+        </div>
+        <hr>
         <?php if (!empty($questions)): ?>
         <div class='user-questions'>
             <h3>Frågor</h3>
@@ -69,7 +71,17 @@
         </div>       
         <hr>
         <?php endif; ?>
-            
+        
+        <?php if (!empty($voteCount[0]->sum)): ?>
+            <div class='user-votes'>
+                <h3>Lagda röster</h3>
+                <ul class="fa-ul">
+                    <li><i class="fa-li fa fa-thumbs-o-up"></i> <?=$voteCount[0]->pos_votes ?></li>
+                    <li><i class="fa-li fa fa-thumbs-o-down"></i> <?=$voteCount[0]->neg_votes ?></li>
+                </ul>
+            </div>       
+            <hr>
+        <?php endif; ?>    
     
     </div>
     

@@ -27,7 +27,7 @@ class CUserForm extends \Mos\HTMLForm\CForm
         $password = isset($user->password) ? $user->password : null;
         $email = isset($user->email) ? $user->email : null;
         $profile = isset($user->profile) ? htmlspecialchars($user->profile) : null;
-        $id = is_numeric($user->id) ? $user->id : null;
+        $id = isset($user->id) AND is_numeric($user->id) ? $user->id : null;
         $created = isset($user->created) ? $user->created : null;
 
         // form for new users
