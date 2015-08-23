@@ -38,15 +38,6 @@ $di->set('users', function () use ($di) {
     return $users;
 });
 
-
-// // create question model
-// $di->set('question', function () use ($di) {
-    // // $users = new \Anax\Users\User($di);
-    // $question = new \Joah\Forum\Question($di);
-    // $question->setDI($di);
-    // return $question;
-// });
-
 // setup a html purifier service
 $di->setShared('HTMLPurifier', function(){
     // $config = HTMLPurifier_Config::createDefault();
@@ -106,14 +97,6 @@ $app->router->add('', function() use ($app) {
     'action'     => 'active-users',    
     'params'     => [4],
     ]);  
-    
-    // // sidebar
-    // $content = $app->fileContent->get('forum/sidebar.md');
-    // $content = $app->textFilter->doFilter($content, 'shortcode, markdown');
-    
-    // $app->views->add('forum/content', [
-        // 'content' => $content,
-    // ], 'sidebar');
     
 });
 
