@@ -33,7 +33,7 @@ class Question extends \Anax\MVC\CDatabaseModel
         
         $this->db->select()
                 ->from($this->getSource())
-                ->orderBy('timestamp')
+                ->orderBy('timestamp DESC')
                 ->limit($num);
                 
         $this->db->execute([]);

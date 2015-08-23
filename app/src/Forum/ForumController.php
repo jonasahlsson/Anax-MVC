@@ -225,7 +225,7 @@ class ForumController implements \Anax\DI\IInjectionAware
             1,
             null,
             'Jag har samma problem! Vad har du provat hittills? Själv har jag provat att flytta upp mina tomatplantor på balkongen, 
-            med de slemmiga sniglarna klättrar upp för väggarna. Fasaden på huset har blivit funktskadad av allt snigelslem.',
+men de slemmiga sniglarna klättrar upp för väggarna. Fasaden på huset har blivit fuktskadad av allt snigelslem.',
             2,
             $now
         ]);
