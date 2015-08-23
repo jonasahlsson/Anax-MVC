@@ -140,13 +140,12 @@ class ForumController implements \Anax\DI\IInjectionAware
 
     }
     
-    
-    public function testAction($user_id) 
+    /**
+     *  Test action
+     */
+    public function testAction() 
     {
-        // test route
-        // $this->vote->fetchVotesByUser($user_id);
-        // $this->vote->countPosNegVotesByUser($user_id);
-        $this->userScore($user_id);
+        // test action
     }
     
     /**
@@ -814,6 +813,7 @@ class ForumController implements \Anax\DI\IInjectionAware
         
         $questions = $this->question->findQuestionByUser($user_id);
         $answers = $this->answer->findAnswerByUser($user_id);
+        $answeredQuestions = $this->answer->findAnsweredQuestions($user_id);
         $comments = $this->comment->findCommentByUser($user_id);
         $voteCount = $this->vote->countPosNegVotesByUser($user_id);
         
@@ -827,7 +827,7 @@ class ForumController implements \Anax\DI\IInjectionAware
             $comment->content = $this->HTMLPurifier->purify($comment->content);
         }
         
-        return ['questions' => $questions, 'answers' => $answers, 'comments' => $comments, 'voteCount' => $voteCount ];
+        return ['questions' => $questions, 'answers' => $answers, 'comments' => $comments, 'voteCount' => $voteCount, 'answeredQuestions' => $answeredQuestions ];
         
     }
     
@@ -1345,6 +1345,9 @@ class ForumController implements \Anax\DI\IInjectionAware
         $COMMENT = 1;
         $COMMENT_POS_VOTE = 2;
         $COMMENT_NEG_VOTE = -1;
+        $VOTE = 1;
+        $VOTE_POS = 1;
+        $VOTE_NEG = -1;
         
         // init a score counter
         $score = 0;
@@ -1412,7 +1415,18 @@ class ForumController implements \Anax\DI\IInjectionAware
             }
         }
         
-    return $score;
+        // vote scores
+        $votes = $this->vote->countPosNegVotesByUser($user_id);
+        // each vote scores
+        $score += $votes[0]->pos_votes * $VOTE;
+        $score += $votes[0]->neg_votes * $VOTE;
+        // positive vote increase score
+        $score += $votes[0]->pos_votes * $VOTE_POS;
+        // negative vote lower score
+        $score += $votes[0]->neg_votes * $VOTE_NEG;
+
+        // return the sum
+        return $score;
     
     }
     

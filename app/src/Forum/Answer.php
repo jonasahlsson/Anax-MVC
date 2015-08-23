@@ -74,6 +74,24 @@ class Answer extends \Anax\MVC\CDatabaseModel
     }
     
     /**
+     * Find questions answered by user
+     *
+     * @return array
+     */
+    public function findAnsweredQuestions($user_id)
+    {
+        $sql = "SELECT answer.*, question.title
+                FROM answer
+                INNER JOIN question ON answer.question_id = question.id
+                WHERE answer.user_id = ?
+                GROUP BY question_id";
+        $params = [$user_id]        ;
+                
+        return $this->db->executeFetchAll($sql, $params);
+    }
+    
+    
+    /**
      * Find users with most answers
      *
      * @return array

@@ -103,7 +103,7 @@ class Vote extends \Anax\MVC\CDatabaseModel
     
     
     /*
-    *  Fetch votes by user
+    *  Fetch votes by user divided into positive, negative, and sum.
     *   
     * $param int user_id
     *

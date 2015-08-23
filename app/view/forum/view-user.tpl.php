@@ -40,6 +40,23 @@
         <hr>
         <?php endif; ?>
         
+        <?php if (!empty($answeredQuestions)): ?>
+        <div class='user-answered-questions'>
+            <h3>Besvarade frågor</h3>
+                <ul class="fa-ul">
+                    <?php foreach($answeredQuestions as $answeredQuestion): ?>
+                    <li>
+                        <a href='<?=$this->url->create("forum/view/{$answeredQuestion->question_id}") ?>'>
+                            <i class="fa-li fa fa-exclamation"></i> <?= $answeredQuestion->title ?>
+                        </a>    
+                    </li>
+                    <?php endforeach; ?>
+                </ul>
+        </div>        
+        <hr>
+        <?php endif; ?>
+        
+        
         <?php if (!empty($answers)): ?>
         <div class='user-answers'>
             <h3>Svar</h3>

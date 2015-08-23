@@ -225,7 +225,8 @@ class UsersController extends \Anax\Users\UsersController implements \Anax\DI\II
             'questions' => $questions,
             'answers' => $answers,
             'comments' => $comments,
-            'voteCount' => $voteCount
+            'voteCount' => $voteCount,
+            'answeredQuestions' => $answeredQuestions
         ]);
     }
     

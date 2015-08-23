@@ -5,10 +5,8 @@
         <?php foreach ($questions as $question) :?>
             <li class='question-thumb'>
                 <div class='vote'>
-                    <?= $vote->showVoteSum(1, $question->id) ?>
-                    Röster
-                    <?= $question->answerCount->count_answer ?>
-                    Svar
+                    Röstranking:<?= $vote->showVoteSum(1, $question->id) ?>
+                    Svar:<?= $question->answerCount->count_answer ?>
                 </div>
                 <div class = 'question-thumb-title'>
                     <a href='<?=$this->url->create("forum/view/{$question->id}") ?>'> <h3><?=$question->title ?> </h3> </a>
